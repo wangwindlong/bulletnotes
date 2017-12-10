@@ -3,6 +3,8 @@
 { Files } = require '/imports/api/files/files.coffee'
 { ReactiveDict } = require 'meteor/reactive-dict'
 
+import SimpleSchema from 'simpl-schema'
+
 require './bulletNoteItem.jade'
 
 require '/imports/ui/components/file/file.coffee'
@@ -778,3 +780,44 @@ Template.bulletNoteItem.addAutoComplete = (target) ->
   } ], footer:
     '<a href="http://www.emoji.codes" target="_blank">'+
     'Browse All<span class="arrow">»</span></a>'
+
+fileSchema = _.extend(FilesCollection.schema,
+  noteId:
+    type: String
+)
+
+Template.uploadForm.onCreated ->
+  @currentUpload = new ReactiveVar(false)
+  return
+Template.uploadForm.helpers currentUpload: ->
+  Template.instance().currentUpload.get()
+Template.uploadForm.events 'change #fileInput': (e, template) ->
+  console.log template
+  if e.currentTarget.files and e.currentTarget.files[0]
+    # We upload only one file, in case
+    # there was multiple files selected
+    file = e.currentTarget.files[0]
+    file.noteId = template.data._id
+    if file
+      console.log template.data._id
+      Files.collection.attachSchema new SimpleSchema(fileSchema)
+      try
+        uploadInstance = Files.insert({
+          file: file
+          streams: 'dynamic'
+          chunkSize: 'dynamic'
+          noteId: template.data._id
+        }, false)
+      catch e
+        console.log e
+      uploadInstance.on 'start', ->
+        template.currentUpload.set this
+        return
+      uploadInstance.on 'end', (error, fileObj) ->
+        if error
+          window.alert 'Error during upload: ' + error.reason
+        else
+          window.alert 'File "' + fileObj.name + '" successfully uploaded'
+        template.currentUpload.set false
+        return
+      uploadInstance.start()

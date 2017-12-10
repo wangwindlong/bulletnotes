@@ -4,6 +4,8 @@ import { Random } from 'meteor/random';
 import { FilesCollection } from 'meteor/ostrio:files';
 import stream from 'stream';
 
+import SimpleSchema from 'simpl-schema'
+
 import S3 from 'aws-sdk/clients/s3'; // http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html
 // See fs-extra and graceful-fs NPM packages
 // For better i/o performance
@@ -15,6 +17,12 @@ import { createThumbnails } from './image-processing.js'
 if (process.env.S3) {
   Meteor.settings.s3 = JSON.parse(process.env.S3).s3;
 }
+
+const fileSchema = _.extend(FilesCollection.schema, {
+  noteId: {
+    type: String
+  }
+});
 
 const s3Conf = Meteor.settings.s3 || {};
 const bound  = Meteor.bindEnvironment((callback) => {
@@ -41,6 +49,7 @@ if (s3Conf && s3Conf.key && s3Conf.secret && s3Conf.bucket && s3Conf.region) {
     debug: false, // Change to `true` for debugging
     storagePath: 'assets/app/uploads/uploadedFiles',
     collectionName: 'files',
+    schema: fileSchema,
     // Disallow Client to execute remove, use the Meteor.method
     allowClientCode: false,
 
@@ -168,6 +177,8 @@ if (s3Conf && s3Conf.key && s3Conf.secret && s3Conf.bucket && s3Conf.region) {
       return false;
     }
   });
+
+  Files.collection.attachSchema(new SimpleSchema(fileSchema));
 
   // Intercept FilesCollection's remove method to remove file from AWS:S3
   const _origRemove = Files.remove;

@@ -318,31 +318,3 @@ Template.bulletNotes.getProgressClass = (note) ->
     return 'success'
   else
     return 'warning'
-
-Template.uploadForm.onCreated ->
-  @currentUpload = new ReactiveVar(false)
-  return
-Template.uploadForm.helpers currentUpload: ->
-  Template.instance().currentUpload.get()
-Template.uploadForm.events 'change #fileInput': (e, template) ->
-  if e.currentTarget.files and e.currentTarget.files[0]
-    # We upload only one file, in case
-    # there was multiple files selected
-    file = e.currentTarget.files[0]
-    if file
-      uploadInstance = Files.insert({
-        file: file
-        streams: 'dynamic'
-        chunkSize: 'dynamic'
-      }, false)
-      uploadInstance.on 'start', ->
-        template.currentUpload.set this
-        return
-      uploadInstance.on 'end', (error, fileObj) ->
-        if error
-          window.alert 'Error during upload: ' + error.reason
-        else
-          window.alert 'File "' + fileObj.name + '" successfully uploaded'
-        template.currentUpload.set false
-        return
-      uploadInstance.start()

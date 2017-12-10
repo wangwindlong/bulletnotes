@@ -1,5 +1,5 @@
 template(name="file")
-  a.fileImage.fileItem.thumbnail(href='#', data-toggle='modal', data-target='#file_{{_id}}', data-id='{{_id}}')
+  a.fileImage.fileItem.thumbnail(href='#', data-id='{{_id}}')
     a.delete.glyphicon.glyphicon-remove(data-id="{{_id}}")
     if showPreview
       source(type="#{type}" srcset="{{link 'preview'}}")
@@ -19,15 +19,18 @@ template(name="file")
     a.delete.glyphicon.glyphicon-remove(data-id="{{_id}}")
     .glyphicon.glyphicon-file
     | {{name}}
-  .modal.fade.fileModal(id="file_{{_id}}", tabindex='-1', role='dialog', style='display: none;')
-    .modal-dialog
-      form.modal-content
-        .modal-header
-          button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
-          h4#myModalLabel.modal-title File: {{name}}
-        .modal-body
-            a(href="{{data}}",target="_blank")
-              img(src=data,width="100%")
-        .modal-footer
-          a.btn.btn-sm.delete(data-id="{{_id}}") Delete
-          button.btn.btn-sm(data-dismiss='modal') Cancel
+  if showModal
+    a.modalTrigger(data-toggle='modal', data-target='#file_{{_id}}',style='display:none;')
+    .modal.fade.fileModal(id="file_{{_id}}", tabindex='-1', role='dialog', style='display: none;')
+      .modal-dialog
+        form.modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h4#myModalLabel.modal-title File: {{name}}
+          .modal-body
+              a(href="{{data}}",target="_blank")
+                source(type="#{type}" srcset="{{link}}")
+                img.file-preview(src="{{link}}" alt="#{name}")
+          .modal-footer
+            a.btn.btn-sm.delete(data-id="{{_id}}") Delete
+            button.btn.btn-sm(data-dismiss='modal') Cancel

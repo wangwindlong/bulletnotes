@@ -1,12 +1,20 @@
 import { Meteor }          from 'meteor/meteor';
 import { FilesCollection } from 'meteor/ostrio:files';
+import { _ }                 from 'meteor/underscore';
 
 import { Mongo } from 'meteor/mongo'
 import { Factory } from 'meteor/dburles:factory'
 import SimpleSchema from 'simpl-schema'
 import faker from 'faker'
 
+fileSchema = _.extend(FilesCollection.schema,
+  noteId:
+    type: String
+)
+console.log FilesCollection.schema
+console.log fileSchema
 export Files = new FilesCollection(
+  schema: fileSchema
   debug: true
   collectionName: 'files'
   allowClientCode: false
@@ -16,32 +24,4 @@ export Files = new FilesCollection(
       return true
     'Please upload image, with size equal or less than 10MB'
 )
-
-# Files.schema = new SimpleSchema
-#   _id:
-#     type: String
-#     regEx: SimpleSchema.RegEx.Id
-#     optional: yes
-#   noteId:
-#     type: String
-#     regEx: SimpleSchema.RegEx.Id
-#     index: 1
-#   data:
-#     type: String
-#   file:
-#     type: String
-#   name:
-#     type: String
-#   uploadedAt:
-#     type: Date
-#   owner:
-#     type: String
-#     regEx: SimpleSchema.RegEx.Id
-#     index: 1
-
-# Files.attachSchema Files.schema
-
-# Files.publicFields =
-#   noteId: 1
-#   data: 1
-#   file: 1
+Files.collection.attachSchema fileSchema

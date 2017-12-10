@@ -7,18 +7,6 @@ require './file.jade'
 
 Template.file.isImage = true
 
-Template.file.events
-  "click .fileImage": (event, template) ->
-    $('#__blaze-root').append($(event.currentTarget).siblings('.modal'))
-
-  "click .delete": (event, template) ->
-    event.preventDefault()
-    event.stopPropagation()
-    if confirm "Are you sure you want to delete this file?"
-      Meteor.call 'files.remove',
-        id: event.target.dataset.id
-
-
 Template.file.onCreated ->
   @showOriginal = new ReactiveVar(false)
   @fetchedText = new ReactiveVar(false)
@@ -26,6 +14,7 @@ Template.file.onCreated ->
   @showError = new ReactiveVar(false)
   @showInfo = new ReactiveVar(false)
   @warning = new ReactiveVar(false)
+  @showModal = new ReactiveVar(false)
 
   # $(this.find('.fileModal .delete')).click (event) ->
   #   if confirm "Are you sure you want to delete this file?"
@@ -130,6 +119,9 @@ Template.file.helpers
     Template.instance().showPreview.get()
   showOriginal: ->
     Template.instance().showOriginal.get()
+  showModal: ->
+    Template.instance().showModal.get()
+
 Template.file.events
 
   'click [data-show-info]': (e, template) ->
@@ -152,3 +144,17 @@ Template.file.events
         template.$('a.download-file').show()
         return
       ), 768)
+  "click .fileImage": (event, template) ->
+    template.showModal.set true
+    setTimeout ->
+      template.$('.modalTrigger').trigger('click')
+      $('#__blaze-root').append($(event.currentTarget).siblings('.modal'))
+    , 20
+
+  "click .delete": (event, template) ->
+    event.preventDefault()
+    event.stopPropagation()
+    if confirm "Are you sure you want to delete this file?"
+      Meteor.call 'files.remove',
+        id: event.target.dataset.id
+
