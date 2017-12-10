@@ -4,19 +4,19 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method'
 import SimpleSchema from 'simpl-schema'
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 
-import { Notes } from '../notes/notes.coffee'
-import { Files } from './files.coffee'
+import { Notes } from '/imports/api/notes/notes.coffee'
+import { Files } from './files.collection.js'
 
 export remove = new ValidatedMethod
   name: 'files.remove'
   validate: new SimpleSchema
-    id: Files.simpleSchema().schema('_id')
+    id: Notes.simpleSchema().schema('_id')
   .validator
     clean: yes
     filter: no
   run: ({ id }) ->
     file = Files.findOne id
-    if @userId != file.owner
+    if @userId != file.userId
       throw new (Meteor.Error)('not-authorized')
 
     Files.remove { _id: id }
@@ -24,7 +24,7 @@ export remove = new ValidatedMethod
 export setNote = new ValidatedMethod
   name: 'files.setNote'
   validate: new SimpleSchema
-    fileId: Files.simpleSchema().schema('_id')
+    fileId: Notes.simpleSchema().schema('_id')
     noteId: Notes.simpleSchema().schema('_id')
   .validator
     clean: yes
@@ -50,31 +50,10 @@ export fileSize = new ValidatedMethod
       size += BSON.calculateObjectSize doc
     console.log "Got size: ",size
 
-export upload = new ValidatedMethod
-  name: 'files.upload'
-  validate: new SimpleSchema
-    noteId: Notes.simpleSchema().schema('_id')
-    data: Files.simpleSchema().schema('data')
-    name: Files.simpleSchema().schema('name')
-  .validator
-    clean: yes
-  run: ({noteId, data, name}) ->
-    if !@userId || !Meteor.user().isAdmin
-      throw new (Meteor.Error)('not-authorized')
-    Files.insert {
-      noteId: noteId
-      data: data
-      name: name
-      owner: @userId
-      uploadedAt: new Date
-    }
-    Notes.update noteId, $set:
-      showContent: true
 
 # Get note of all method names on Notes
 NOTES_METHODS = _.pluck([
   remove
-  upload
   setNote
 ], 'name')
 

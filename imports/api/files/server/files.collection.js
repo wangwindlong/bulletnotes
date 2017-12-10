@@ -9,6 +9,8 @@ import S3 from 'aws-sdk/clients/s3'; // http://docs.aws.amazon.com/AWSJavaScript
 // For better i/o performance
 import fs from 'fs';
 
+import { createThumbnails } from './image-processing.js'
+
 // Example: S3='{"s3":{"key": "xxx", "secret": "xxx", "bucket": "xxx", "region": "xxx""}}' meteor
 if (process.env.S3) {
   Meteor.settings.s3 = JSON.parse(process.env.S3).s3;
@@ -44,48 +46,59 @@ if (s3Conf && s3Conf.key && s3Conf.secret && s3Conf.bucket && s3Conf.region) {
 
     // Start moving files to AWS:S3
     // after fully received by the Meteor server
-    onAfterUpload(fileRef) {
-      // Run through each of the uploaded file
-      _.each(fileRef.versions, (vRef, version) => {
-        // We use Random.id() instead of real file's _id
-        // to secure files from reverse engineering on the AWS client
-        const filePath = 'files/' + (Random.id()) + '-' + version + '.' + fileRef.extension;
-
-        // Create the AWS:S3 object.
-        // Feel free to change the storage class from, see the documentation,
-        // `STANDARD_IA` is the best deal for low access files.
-        // Key is the file name we are creating on AWS:S3, so it will be like files/XXXXXXXXXXXXXXXXX-original.XXXX
-        // Body is the file stream we are sending to AWS
-        s3.putObject({
-          // ServerSideEncryption: 'AES256', // Optional
-          StorageClass: 'STANDARD',
-          Bucket: s3Conf.bucket,
-          Key: filePath,
-          Body: fs.createReadStream(vRef.path),
-          ContentType: vRef.type,
-        }, (error) => {
-          bound(() => {
-            if (error) {
-              console.error(error);
-            } else {
-              // Update FilesCollection with link to the file at AWS
-              const upd = { $set: {} };
-              upd['$set']['versions.' + version + '.meta.pipePath'] = filePath;
-
-              this.collection.update({
-                _id: fileRef._id
-              }, upd, (updError) => {
-                if (updError) {
-                  console.error(updError);
-                } else {
-                  // Unlink original files from FS after successful upload to AWS:S3
-                  this.unlink(this.collection.findOne(fileRef._id), version);
-                }
-              });
-            }
+    onAfterUpload(_fileRef) {
+      sendToStorage = (fileRef) => {
+        _.each(fileRef.versions, (vRef, version) => {
+          // We use Random.id() instead of real file's _id
+          // to secure files from reverse engineering
+          // As after viewing this code it will be easy
+          // to get access to unlisted and protected files
+          const filePath = 'files/' + (Random.id()) + '-' + version + '.' + fileRef.extension;
+  
+          s3.putObject({
+            StorageClass: 'STANDARD',
+            Bucket: s3Conf.bucket,
+            Key: filePath,
+            Body: fs.createReadStream(vRef.path),
+            ContentType: vRef.type,
+          }, (error) => {
+            bound(() => {
+              if (error) {
+                console.error(error);
+              } else {
+                const upd = { $set: {} };
+                upd['$set']['versions.' + version + '.meta.pipePath'] = filePath;
+                this.collection.update({
+                  _id: fileRef._id
+                }, upd, (updError) => {
+                  if (updError) {
+                    console.error(updError);
+                  } else {
+                    // Unlink original file from FS
+                    // after successful upload to AWS:S3
+                    this.unlink(this.collection.findOne(fileRef._id), version);
+                  }
+                });
+              }
+            });
           });
         });
-      });
+      };
+
+      // Run through each of the uploaded file
+      if (/png|jpe?g/i.test(_fileRef.extension || '')) {
+        Meteor.setTimeout( () => {
+          createThumbnails(this, _fileRef, (error) => {
+            if (error) {
+              console.error(error);
+            }
+
+            sendToStorage(this.collection.findOne(_fileRef._id));
+          });
+        }, 1024);
+      } else {
+        sendToStorage(_fileRef);
+      }
     },
 
 

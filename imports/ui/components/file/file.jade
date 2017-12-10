@@ -1,10 +1,18 @@
 template(name="file")
   a.fileImage.fileItem.thumbnail(href='#', data-toggle='modal', data-target='#file_{{_id}}', data-id='{{_id}}')
     a.delete.glyphicon.glyphicon-remove(data-id="{{_id}}")
-    with imageFile.with
-      img(src="{{link}}", alt="{{name}}")
+    if showPreview
+      source(type="#{type}" srcset="{{link 'preview'}}")
+      img.file-preview(src="{{link 'preview'}}" alt="#{name}")
+    else if showOriginal
+      source(type="#{type}" srcset="{{link}}")
+      img.file-preview(src="{{link}}" alt="#{name}")
+    else if showError
+      h3.files-note
+        | Browser can't display this image. The "#{type}" format may be not supported in your browser. Please
+        a(title="Download \"#{name}\"" href="{{link}}?download=true" download="#{name}") download file
     else
-      | Loading Image...
+      h1.files-note: i.fa.fa-fw.fa-spin.fa-spinner
     
     | {{name}}
   a.fileDownload.fileItem.thumbnail(href='{{data}}', style='display: none', target="_blank")

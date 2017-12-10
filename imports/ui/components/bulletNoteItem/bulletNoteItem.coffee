@@ -42,11 +42,21 @@ Template.bulletNoteItem.isValidImageUrl = (url, callback) ->
       callback url, true
 
 Template.bulletNoteItem.onCreated ->
+  Meteor.subscribe 'files.note', @_id
   if @data.showChildren && @data.children && !FlowRouter.getParam 'searchParam'
     Meteor.call 'notes.setChildrenLastShown', {
       noteId: @data._id
     }
 
+  this.latest = new ReactiveVar(new Mongo.Cursor)
+  cursor = Files.find({}, {
+    sort: {
+      'meta.created_at': -1
+    }
+  });
+
+  # cursor.observeChanges(observers)
+  this.latest.set(cursor)
   Meteor.subscribe 'notes.logs', @data._id
 
   @state = new ReactiveDict()
@@ -90,8 +100,8 @@ Template.bulletNoteItem.helpers
     @rank / 2
 
   files: () ->
-    Meteor.subscribe 'files.note', @_id
-    Files.find { noteId: @_id }
+    
+    Template.instance().latest.get()
 
   childNotes: () ->
     if (

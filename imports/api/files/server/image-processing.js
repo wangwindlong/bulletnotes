@@ -1,5 +1,4 @@
 import { _ }      from 'meteor/underscore';
-import { _app }   from '/imports/lib.js';
 import { check }  from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 
@@ -16,7 +15,7 @@ const bound = Meteor.bindEnvironment((callback) => {
   return callback();
 });
 
-_app.createThumbnails = (collection, fileRef, cb) => {
+export const createThumbnails = (collection, fileRef, cb) => {
   check(fileRef, Object);
 
   let isLast = false;
@@ -66,7 +65,7 @@ _app.createThumbnails = (collection, fileRef, cb) => {
               'versions.original.meta.width': features.width,
               'versions.original.meta.height': features.height
             }
-          }, _app.NOOP);
+          });
 
           _.each(sizes, (size, name) => {
             const path = (collection.storagePath(fileRef)) + '/' + name + '-' + fileRef._id + '.' + fileRef.extension;
