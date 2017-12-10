@@ -18,9 +18,9 @@ import {
   setShowContent
 } from '/imports/api/notes/methods.coffee'
 
-import {
-  upload
-} from '/imports/api/files/methods.coffee'
+# import {
+#   upload
+# } from '/imports/api/files/methods.coffee'
 
 Template.bulletNoteItem.previewXOffset = 20
 Template.bulletNoteItem.previewYOffset = 20

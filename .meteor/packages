@@ -97,12 +97,10 @@ aldeed:schema-deny
 practicalmeteor:mocha-console-runner
 saucecode:rollbar
 meteorhacks:picker
-vsivsi:file-collection
 rzymek:fullcalendar
 ccorcos:subs-cache
 emojione:emojione
 mquandalle:jquery-textcomplete
-browser-policy@1.1.0
 
 percolate:migrations
 zodiase:mdl
@@ -127,3 +125,8 @@ facebook-config-ui
 github-config-ui
 twitter-config-ui
 bozhao:link-accounts
+ostrio:files
+mrt:filesize
+
+
+ostrio:templatehelpers

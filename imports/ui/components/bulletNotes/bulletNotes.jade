@@ -1,4 +1,6 @@
 template(name='bulletNotes')
+  +uploadForm
+  +uploadedFiles
   ol#notes.content-scrollable.note-items.sortable
     if focusedNote.body
       li.body(contenteditable='true')
@@ -29,3 +31,29 @@ template(name='bulletNotes')
     else
       .wrapper-message
         .title-message {{_ 'notes.show.loading'}}
+
+template(name='uploadForm')
+  with currentUpload
+    | Uploading 
+    b {{file.name}}
+    | : 
+    span#progress {{progress.get}}%
+  else
+    input#fileInput(type='file')
+    p
+      small
+        | Upload file in 
+        code jpeg
+        |  or 
+        code png
+        |  format, with size less or equal to 10MB
+
+template(name='uploadedFiles')
+  if uploadedFiles.count
+    ul
+      each file in uploadedFiles.each
+        li
+          a(href='{{file.link}}?download=true', download='{{file.name}}') {{file.name}}
+
+  else
+    div No files uploaded, yet

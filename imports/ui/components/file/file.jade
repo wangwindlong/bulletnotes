@@ -1,7 +1,11 @@
 template(name="file")
   a.fileImage.fileItem.thumbnail(href='#', data-toggle='modal', data-target='#file_{{_id}}', data-id='{{_id}}')
     a.delete.glyphicon.glyphicon-remove(data-id="{{_id}}")
-    img(src=data)
+    with imageFile.with
+      img(src="{{link}}", alt="{{name}}")
+    else
+      | Loading Image...
+    
     | {{name}}
   a.fileDownload.fileItem.thumbnail(href='{{data}}', style='display: none', target="_blank")
     a.delete.glyphicon.glyphicon-remove(data-id="{{_id}}")

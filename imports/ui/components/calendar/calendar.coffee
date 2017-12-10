@@ -1,6 +1,5 @@
 { Template } = require 'meteor/templating'
 { Notes } = require '/imports/api/notes/notes.coffee'
-{ Files } = require '/imports/api/files/files.coffee'
 require './calendar.jade'
 
 Template.calendar.onCreated ->
@@ -65,7 +64,7 @@ Template.calendar.onRendered ->
     $('#calendar').fullCalendar 'removeEvents'
     notes.forEach (row) ->
       Meteor.subscribe 'files.note', row._id
-      file = Files.findOne { noteId: row._id }
+      #file = Files.findOne { noteId: row._id }
 
       event = {
         id: row._id
