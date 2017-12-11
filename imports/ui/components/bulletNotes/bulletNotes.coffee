@@ -107,7 +107,10 @@ Template.bulletNotes.helpers
 
   focusedNoteFiles: () ->
     Meteor.subscribe 'files.note', FlowRouter.getParam 'noteId'
-    Files.find { noteId: FlowRouter.getParam 'noteId' }
+    try
+      Files.find { noteId: FlowRouter.getParam 'noteId' }
+    catch e
+      console.log e
 
   focusedNoteBody: ->
     note = Notes.findOne FlowRouter.getParam 'noteId',

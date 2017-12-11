@@ -1,5 +1,6 @@
 { Template } = require 'meteor/templating'
 { Notes } = require '/imports/api/notes/notes.coffee'
+{ Files } = require '/imports/api/files/files.coffee'
 require './calendar.jade'
 
 Template.calendar.onCreated ->
@@ -64,7 +65,7 @@ Template.calendar.onRendered ->
     $('#calendar').fullCalendar 'removeEvents'
     notes.forEach (row) ->
       Meteor.subscribe 'files.note', row._id
-      #file = Files.findOne { noteId: row._id }
+      file = Files.findOne { noteId: row._id }
 
       event = {
         id: row._id
@@ -76,10 +77,11 @@ Template.calendar.onRendered ->
       }
       $('#calendar').fullCalendar 'renderEvent', event, true
       events.push event
-
+      console.log row
       if file
+        console.log file, file.link()
         date = moment.utc(row.date).format('YYYY-MM-DD')
-        $('.fc-day[data-date="'+date+'"]').css('background-image', 'url(' + file.data + ')');
+        $('.fc-day[data-date="'+date+'"]').css('background-image', 'url(' + file.link('preview') + ')');
 
     setTimeout () ->
       $('.fc-today-button').click()
@@ -101,7 +103,7 @@ Template.calendar.helpers
     }, sort: rank: 1
 
   trimTitle: (title) ->
-    if title.length > 50
+    if title && title.length > 50
       title.substr(0,50)+"..."
     else
       title

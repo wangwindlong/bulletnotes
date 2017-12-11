@@ -224,25 +224,6 @@ Template.bulletNoteItem.events
       , 250
     , 50
 
-  'change .fileInput': (event, instance) ->
-    event.preventDefault()
-    event.stopImmediatePropagation()
-
-    console.log event
-    console.log instance
-    for file in event.currentTarget.files
-      name = file.name
-      Template.bulletNoteItem.encodeImageFileAsURL (res) ->
-        upload.call {
-          noteId: instance.data._id
-          data: res
-          name: name
-        }, (err, res) ->
-          if err
-            alert err
-          $(event.currentTarget).closest('.noteContainer').removeClass 'dragging'
-      , file
-
   'click .toggleComplete': (event, instance) ->
     event.preventDefault()
     event.stopImmediatePropagation()
@@ -781,11 +762,6 @@ Template.bulletNoteItem.addAutoComplete = (target) ->
     '<a href="http://www.emoji.codes" target="_blank">'+
     'Browse All<span class="arrow">»</span></a>'
 
-fileSchema = _.extend(FilesCollection.schema,
-  noteId:
-    type: String
-)
-
 Template.uploadForm.onCreated ->
   @currentUpload = new ReactiveVar(false)
   return
@@ -800,13 +776,13 @@ Template.uploadForm.events 'change #fileInput': (e, template) ->
     file.noteId = template.data._id
     if file
       console.log template.data._id
-      Files.collection.attachSchema new SimpleSchema(fileSchema)
+
       try
         uploadInstance = Files.insert({
           file: file
           streams: 'dynamic'
           chunkSize: 'dynamic'
-          noteId: template.data._id
+          # noteId: template.data._id
         }, false)
       catch e
         console.log e

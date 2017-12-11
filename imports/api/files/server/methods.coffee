@@ -5,7 +5,7 @@ import SimpleSchema from 'simpl-schema'
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter'
 
 import { Notes } from '/imports/api/notes/notes.coffee'
-import { Files } from './files.collection.js'
+import { Files } from '../files.coffee'
 
 export remove = new ValidatedMethod
   name: 'files.remove'
