@@ -34,23 +34,27 @@ Meteor.startup ->
   Meteor.call 'users.checkSubscriptions'
   SyncedCron.start()
 
-  BrowserPolicy.framing.disallow()
-  #BrowserPolicy.content.disallowInlineScripts()
-  #BrowserPolicy.content.disallowEval()
-  BrowserPolicy.content.allowImageOrigin("blob:")
-  BrowserPolicy.content.allowInlineStyles()
-  BrowserPolicy.content.allowFontDataUrl()
-  BrowserPolicy.content.allowDataUrlForAll()
-  BrowserPolicy.content.allowImageOrigin('*')
-  trusted = [
-    '*.cloudfront.net'
-    'api.keen.io'
-    '*.hotjar.com'
-    '*.stripe.com'
-    'cdn.headwayapp.co'
-    'fonts.googleapis.com'
-    'unpkg.com'
-  ]
-  _.each trusted, (origin) ->
-    origin = 'https://' + origin
-    BrowserPolicy.content.allowOriginForAll origin
+  # BrowserPolicy.framing.disallow()
+  # #BrowserPolicy.content.disallowInlineScripts()
+  # #BrowserPolicy.content.disallowEval()
+  # BrowserPolicy.content.allowImageOrigin("blob:")
+  # BrowserPolicy.content.allowInlineStyles()
+  # BrowserPolicy.content.allowFontDataUrl()
+  # BrowserPolicy.content.allowDataUrlForAll()
+  # BrowserPolicy.content.allowImageOrigin('*')
+  # trusted = [
+  #   '*.cloudfront.net'
+  #   'api.keen.io'
+  #   '*.hotjar.com'
+  #   '*.stripe.com'
+  #   'cdn.headwayapp.co'
+  #   'fonts.googleapis.com'
+  #   'unpkg.com'
+  # ]
+  # _.each trusted, (origin) ->
+  #   origin = 'https://' + origin
+  #   BrowserPolicy.content.allowOriginForAll origin
+
+  # BrowserPolicy.content.allowSameOriginForAll()
+  # constructedCsp = BrowserPolicy.content._constructCsp()
+  # BrowserPolicy.content.setPolicy(constructedCsp+"")
