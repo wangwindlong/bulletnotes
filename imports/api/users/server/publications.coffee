@@ -14,6 +14,7 @@ Meteor.publish 'users.prefs', () ->
       isPro: 1
       apiKey: 1
       storeLocation: 1
+      uploadedFilesSize: 1
   user
 
 Meteor.publish 'users.count.total', ->

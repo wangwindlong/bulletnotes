@@ -7,11 +7,123 @@ import { FilesCollection }   from 'meteor/ostrio:files';
 
 import { createThumbnails } from './image-processing.js'
 
+export Files = new FilesCollection(
+  storagePath: 'assets/app/uploads/uploadedFiles'
+  collectionName: 'files'
+  allowClientCode: true
+  protected: (fileObj) ->
+    if fileObj
+      if !(fileObj.meta and fileObj.meta.secured)
+        return true
+      else if fileObj.meta and fileObj.meta.secured == true and @userId == fileObj.userId
+        return true
+    false
+  onBeforeRemove: (cursor) ->
+    res = cursor.map((file) ->
+      if file and file.userId and _.isString(file.userId)
+        return file.userId == @userId
+      false
+    )
+    ! ~res.indexOf(false)
+  onBeforeUpload: ->
+    if @file.size <= 1024 * 1024 * 128
+      return true
+    'Max. file size is 128MB you\'ve tried to upload ' + filesize(@file.size)
+  downloadCallback: (fileObj) ->
+    if @params and @params.query and @params.query.download == 'true'
+      Files.collection.update fileObj._id, { $inc: 'meta.downloads': 1 }, false
+    true
+  interceptDownload: (http, fileRef, version) ->
+    path = undefined
+    if useDropBox
+      path = if fileRef and fileRef.versions and fileRef.versions[version] and fileRef.versions[version].meta and fileRef.versions[version].meta.pipeFrom then fileRef.versions[version].meta.pipeFrom else undefined
+      if path
+        # If file is successfully moved to Storage
+        # We will pipe request to Storage
+        # So, original link will stay always secure
+        # To force ?play and ?download parameters
+        # and to keep original file name, content-type,
+        # content-disposition and cache-control
+        # we're using low-level .serve() method
+        @serve http, fileRef, fileRef.versions[version], version, request(
+          url: path
+          headers: _.pick(http.request.headers, 'range', 'cache-control', 'connection'))
+        return true
+      # While file is not yet uploaded to Storage
+      # We will serve file from FS
+      return false
+    else if useS3
+      path = if fileRef and fileRef.versions and fileRef.versions[version] and fileRef.versions[version].meta and fileRef.versions[version].meta.pipePath then fileRef.versions[version].meta.pipePath else undefined
+      if path
+        # If file is successfully moved to Storage
+        # We will pipe request to Storage
+        # So, original link will stay always secure
+        # To force ?play and ?download parameters
+        # and to keep original file name, content-type,
+        # content-disposition and cache-control
+        # we're using low-level .serve() method
+        @serve http, fileRef, fileRef.versions[version], version, client.getObject(
+          Bucket: s3Conf.bucket
+          Key: path).createReadStream()
+        return true
+      # While file is not yet uploaded to Storage
+      # We will serve file from FS
+      return false
+    false
+)
+
+# DropBox usage:
+# Read: https://github.com/VeliovGroup/Meteor-Files/wiki/DropBox-Integration
+# env.var example: DROPBOX='{"dropbox":{"key": "xxx", "secret": "xxx", "token": "xxx"}}'
+useDropBox = false
+# AWS:S3 usage:
+# Read: https://github.com/VeliovGroup/Meteor-Files/wiki/AWS-S3-Integration
+# env.var example: S3='{"s3":{"key": "xxx", "secret": "xxx", "bucket": "xxx", "region": "xxx""}}'
+useS3 = false
+request = undefined
+bound = undefined
+fs = undefined
+client = undefined
+sendToStorage = undefined
+s3Conf = undefined
+dbConf = undefined
+fs = require('fs-extra')
+if process.env.DROPBOX
+  Meteor.settings.dropbox = JSON.parse(process.env.DROPBOX).dropbox
+else if process.env.S3
+  Meteor.settings.s3 = JSON.parse(process.env.S3).s3
+s3Conf = Meteor.settings.s3 or {}
+dbConf = Meteor.settings.dropbox or {}
+if dbConf and dbConf.key and dbConf.secret and dbConf.token
+  useDropBox = true
+  Dropbox = require('dropbox')
+  client = new (Dropbox.Client)(
+    key: dbConf.key
+    secret: dbConf.secret
+    token: dbConf.token)
+else if s3Conf and s3Conf.key and s3Conf.secret and s3Conf.bucket and s3Conf.region
+  useS3 = true
+  S3 = require('aws-sdk/clients/s3')
+  client = new S3(
+    secretAccessKey: s3Conf.secret
+    accessKeyId: s3Conf.key
+    region: s3Conf.region
+    sslEnabled: true)
+if useS3 or useDropBox
+  request = require('request')
+  bound = Meteor.bindEnvironment((callback) ->
+    callback()
+  )
+
 Files.denyClient()
 Files.on 'afterUpload', (fileRef) ->
-  console.log "After upload!!",fileRef
-  if useDropBox
+  that = this
+  
+  Meteor.users.update fileRef.userId,
+    $inc:
+      uploadedFilesSize: fileRef.size 
 
+  if useDropBox
     makeUrl = (stat, fileRef, version, triesUrl = 0) ->
       client.makeUrl stat.path, {
         long: true
@@ -31,13 +143,13 @@ Files.on 'afterUpload', (fileRef) ->
             upd = $set: {}
             upd['$set']['versions.' + version + '.meta.pipeFrom'] = xml.url
             upd['$set']['versions.' + version + '.meta.pipePath'] = stat.path
-            @collection.update { _id: fileRef._id }, upd, (updError) ->
+            that.collection.update { _id: fileRef._id }, upd, (updError) ->
               if updError
                 console.error updError
               else
                 # Unlink original files from FS
                 # after successful upload to DropBox
-                @unlink @collection.findOne(fileRef._id), version
+                that.unlink that.collection.findOne(fileRef._id), version
               return
           else
             if triesUrl < 10
@@ -116,30 +228,29 @@ Files.on 'afterUpload', (fileRef) ->
             else
               upd = $set: {}
               upd['$set']['versions.' + version + '.meta.pipePath'] = filePath
-              @collection.update { _id: fileRef._id }, upd, (error) ->
+              that.collection.update { _id: fileRef._id }, upd, (error) ->
                 if error
                   console.error error
                 else
                   # Unlink original file from FS
                   # after successful upload to AWS:S3
-                  @unlink @collection.findOne(fileRef._id), version
+                  that.unlink that.collection.findOne(fileRef._id), version
                 return
             return
           return
         return
       return
-  createThumbnails = 
+      
   if /png|jpe?g/i.test(fileRef.extension or '')
     createThumbnails this, fileRef, (error, fileRef) ->
       if error
         console.error error
       if useDropBox or useS3
-        sendToStorage @collection.findOne(fileRef._id)
+        sendToStorage that.collection.findOne(fileRef._id)
       return
   else
     if useDropBox or useS3
       sendToStorage fileRef
-  return
 # This line now commented due to Heroku usage
 # Collections.files.collection._ensureIndex {'meta.expireAt': 1}, {expireAfterSeconds: 0, background: true}
 # Intercept FileCollection's remove method
@@ -176,52 +287,3 @@ if useDropBox or useS3
     # Call original method
     _origRemove.call this, search
     return
-
-Meteor.methods
-  filesLenght: (userOnly = false) ->
-    check userOnly, Boolean
-    selector = undefined
-    if userOnly and @userId
-      selector = userId: @userId
-    else
-      selector = $or: [
-        {
-          'meta.unlisted': false
-          'meta.secured': false
-          'meta.blamed': $lt: 3
-        }
-        { userId: @userId }
-      ]
-    Files.find(selector).count()
-  unblame: (_id) ->
-    check _id, String
-    Yiles.update { _id: _id }, { $inc: 'meta.blamed': -1 }, false
-    true
-  blame: (_id) ->
-    check _id, String
-    Yiles.update { _id: _id }, { $inc: 'meta.blamed': 1 }, false
-    true
-  changeAccess: (_id) ->
-    check _id, String
-    if Meteor.userId()
-      file = Files.findOne(
-        _id: _id
-        userId: Meteor.userId())
-      if file
-        Files.update _id, { $set: 'meta.unlisted': if file.meta.unlisted then false else true }, false
-        return true
-    throw new (Meteor.Error)(401, 'Access denied!')
-    return
-  changePrivacy: (_id) ->
-    check _id, String
-    if Meteor.userId()
-      file = Files.findOne(
-        _id: _id
-        userId: Meteor.userId())
-      if file
-        Files.update _id, { $set:
-          'meta.unlisted': true
-          'meta.secured': if file.meta.secured then false else true }, false
-        return true
-    throw new (Meteor.Error)(401, 'Access denied!')
-

@@ -72,7 +72,7 @@ Template.bulletNotes.onCreated ->
 Template.bulletNotes.onRendered ->
   $('.title-wrapper').show()
   Template.App_body.recordEvent 'notesRendered', owner: @userId
-
+  
 Template.bulletNotes.helpers
   notes: ->
     NProgress.done()

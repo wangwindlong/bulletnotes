@@ -20,10 +20,6 @@ import {
   setShowContent
 } from '/imports/api/notes/methods.coffee'
 
-# import {
-#   upload
-# } from '/imports/api/files/methods.coffee'
-
 Template.bulletNoteItem.previewXOffset = 20
 Template.bulletNoteItem.previewYOffset = 20
 
@@ -50,22 +46,13 @@ Template.bulletNoteItem.onCreated ->
       noteId: @data._id
     }
 
-  this.latest = new ReactiveVar(new Mongo.Cursor)
-  cursor = Files.find({}, {
-    sort: {
-      'meta.created_at': -1
-    }
-  });
-
-  # cursor.observeChanges(observers)
-  this.latest.set(cursor)
   Meteor.subscribe 'notes.logs', @data._id
 
   @state = new ReactiveDict()
   @state.setDefault
     focused: false
     showComplete: false
-
+  @currentUpload = new ReactiveVar(false)
   query = Notes.find({_id:@data._id})
 
   handle = query.observeChanges(
@@ -78,21 +65,18 @@ Template.bulletNoteItem.onCreated ->
 
 Template.bulletNoteItem.onRendered ->
   noteElement = this
+  $('.fileItem').draggable
+    revert: true
 
+  $('.note-item').droppable
+    drop: (event, ui ) ->
+      console.log "Drop! ",event
+      if event.toElement && event.toElement.className.indexOf('fileItem') > -1
+        event.stopPropagation()
+        Meteor.call 'files.setNote',
+          fileId: event.toElement.dataset.id
+          noteId: event.target.dataset.id
   Session.set('expand_'+this.data._id, this.data.showChildren)
-
-  Tracker.autorun ->
-    $('.fileItem').draggable
-      revert: true
-
-    $('.note-item').droppable
-      drop: (event, ui ) ->
-        if event.toElement && event.toElement.className.indexOf('fileItem') > -1
-          event.stopPropagation()
-          Meteor.call 'files.setNote',
-            fileId: event.toElement.dataset.id
-            noteId: event.target.dataset.id
-          , (err, res) ->
 
 Template.bulletNoteItem.helpers
   currentShareKey: () ->
@@ -102,8 +86,11 @@ Template.bulletNoteItem.helpers
     @rank / 2
 
   files: () ->
-    
-    Template.instance().latest.get()
+    Files.find({noteId:@_id}, {
+      sort: {
+        'meta.created_at': -1
+      }
+    })
 
   childNotes: () ->
     if (
@@ -209,6 +196,9 @@ Template.bulletNoteItem.helpers
   canUnindent: ->
     $('#noteItem_'+@_id).parentsUntil('.note-item').closest('.note-item').length
 
+  currentUpload: ->
+    Template.instance().currentUpload.get()
+    
 Template.bulletNoteItem.events
   'click .encryptLink, click .decryptLink, click .encryptedIcon': (event, instance) ->
     event.preventDefault()
@@ -665,17 +655,14 @@ Template.bulletNoteItem.events
       console.log "Move file!"
     else
       for file in event.originalEvent.dataTransfer.files
-        name = file.name
-        Template.bulletNoteItem.encodeImageFileAsURL (res) ->
-          upload.call {
-            noteId: instance.data._id
-            data: res
-            name: name
-          }, (err, res) ->
-            if err
-              alert err
-            $(event.currentTarget).closest('.noteContainer').removeClass 'dragging'
-        , file
+        Template.bulletNoteItem.upload file, instance
+
+  'change .fileInput': (event, instance) ->
+    event.preventDefault()
+    event.stopImmediatePropagation()
+
+    for file in event.currentTarget.files
+      Template.bulletNoteItem.upload file, instance
 
 Template.bulletNoteItem.toggleChildren = (instance) ->
   if Meteor.userId()
@@ -762,38 +749,34 @@ Template.bulletNoteItem.addAutoComplete = (target) ->
     '<a href="http://www.emoji.codes" target="_blank">'+
     'Browse All<span class="arrow">»</span></a>'
 
-Template.uploadForm.onCreated ->
-  @currentUpload = new ReactiveVar(false)
-  return
-Template.uploadForm.helpers currentUpload: ->
-  Template.instance().currentUpload.get()
-Template.uploadForm.events 'change #fileInput': (e, template) ->
-  console.log template
-  if e.currentTarget.files and e.currentTarget.files[0]
-    # We upload only one file, in case
-    # there was multiple files selected
-    file = e.currentTarget.files[0]
-    file.noteId = template.data._id
-    if file
-      console.log template.data._id
 
-      try
-        uploadInstance = Files.insert({
-          file: file
-          streams: 'dynamic'
-          chunkSize: 'dynamic'
-          # noteId: template.data._id
-        }, false)
-      catch e
-        console.log e
-      uploadInstance.on 'start', ->
-        template.currentUpload.set this
-        return
-      uploadInstance.on 'end', (error, fileObj) ->
-        if error
-          window.alert 'Error during upload: ' + error.reason
-        else
-          window.alert 'File "' + fileObj.name + '" successfully uploaded'
-        template.currentUpload.set false
-        return
-      uploadInstance.start()
+Template.bulletNoteItem.upload = (file, template) ->
+  if file
+    try
+      uploadInstance = Files.insert({
+        file: file
+        streams: 'dynamic'
+        chunkSize: 'dynamic'
+      }, false)
+    catch e
+      console.log e
+    uploadInstance.on 'start', ->
+      template.currentUpload.set this
+
+    uploadInstance.on 'end', (error, fileObj) ->
+      if error
+        Template.App_body.showSnackbar
+          message: 'Error during upload: ' + error.reason
+      else
+        Template.App_body.showSnackbar
+          message: 'File "' + fileObj.name + '" successfully uploaded'
+        Meteor.call 'files.setNote',
+            noteId: template.data._id
+            fileId: fileObj._id
+          setShowContent.call
+            noteId: template.data._id
+            showContent: true
+
+      template.currentUpload.set false
+
+    uploadInstance.start()

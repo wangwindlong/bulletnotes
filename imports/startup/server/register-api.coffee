@@ -9,7 +9,6 @@ import '/imports/api/notes/server/methods.coffee'
 import '/imports/api/notes/server/publications.coffee'
 import '/imports/api/notes/server/routes.coffee'
 
-import '/imports/api/files/files.coffee'
 import '/imports/api/files/server/files.coffee'
 import '/imports/api/files/server/publications.coffee'
 import '/imports/api/files/server/methods.coffee'

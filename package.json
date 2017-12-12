@@ -24,6 +24,7 @@
     "dropbox": "^2.5.1",
     "extend": "^3.0.1",
     "faker": "^3.0.1",
+    "filesize": "^3.5.11",
     "fs-extra": "^4.0.3",
     "getmdl-select": "^1.1.0",
     "gm": "^1.23.0",

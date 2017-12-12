@@ -32,7 +32,7 @@ Template.file.onRendered ->
   if @data.isText or @data.isJSON
     if @data.size < 1024 * 64
       HTTP.call 'GET', @data.link(), (error, resp) ->
-        @showPreview.set true
+        that.showPreview.set true
         if error
           console.error error
         else
@@ -42,9 +42,9 @@ Template.file.onRendered ->
               400
             ].indexOf(resp.statusCode)
             if resp.content.length < 1024 * 64
-              @fetchedText.set resp.content
+              that.fetchedText.set resp.content
             else
-              @warning.set true
+              that.warning.set true
         return
     else
       @warning.set true
@@ -62,44 +62,27 @@ Template.file.onRendered ->
         that.showError.set true
         return
 
-      if @data.versions != null and @data.versions.preview != null and @data.versions.preview.extension
+      if @data.versions and typeof @data.versions.preview != 'undefined' and @data.versions.preview.extension
         img.src = @data.link('preview')
       else
-        handle = Collections.files.find(@data._id).observeChanges(changed: (_id, fields) ->
+        handle = Files.find(@data._id).observeChanges(changed: (_id, fields) ->
           if fields != null and fields.versions != null and fields.versions.preview != null and fields.versions.preview.extension
-            img.src = @data.link('preview')
+            img.src = that.data.link('preview')
             handle.stop()
           return
         )
     else
 
       img.onload = ->
-        @showOriginal.set true
+        that.showOriginal.set true
         return
 
       img.onerror = ->
-        @showError.set true
+        that.showError.set true
         return
 
       img.src = @data.link()
-  # else if @data.isVideo
-  #   video = document.getElementById(@data._id)
-  #   if !video.canPlayType(@data.type)
-  #     @showError.set true
-  #   else
-  #     promise = video.play()
-  #     if Object::toString.call(promise) == '[object Promise]' or Object::toString.call(promise) == '[object Object]' and promise.then and Object::toString.call(promise.then) == '[object Function]'
-  #       promise.then(_app.NOOP).catch _app.NOOP
-  # else if @data.isAudio
-  #   audio = document.getElementById(@data._id)
-  #   if !audio.canPlayType(@data.type)
-  #     @showError.set true
-  #   else
-  #     promise = audio.play()
-  #     if Object::toString.call(promise) == '[object Promise]' or Object::toString.call(promise) == '[object Object]' and promise.then and Object::toString.call(promise.then) == '[object Function]'
-  #       promise.then(_app.NOOP).catch _app.NOOP
-  window.IS_RENDERED = true
-  return
+
 Template.file.helpers
   warning: ->
     Template.instance().warning.get()

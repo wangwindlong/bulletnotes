@@ -2,6 +2,8 @@
 { ReactiveDict } = require 'meteor/reactive-dict'
 { Notes } = require '/imports/api/notes/notes.coffee'
 
+import filesize from 'filesize'
+
 require './menu.jade'
 
 Template.menu.onCreated ->
@@ -118,6 +120,12 @@ Template.menu.helpers
   muteClass: ->
     if !Meteor.user().muted
       'mdl-button--colored'
+
+  maxFileUpload: ->
+    filesize Meteor.settings.public.maxFreeUploadBits
+
+  getFileSize: (number) ->
+    filesize number
 
 Template.menu.events
   'click .menuToggle': (event, instance) ->

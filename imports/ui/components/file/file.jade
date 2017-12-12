@@ -12,7 +12,8 @@ template(name="file")
         | Browser can't display this image. The "#{type}" format may be not supported in your browser. Please
         a(title="Download \"#{name}\"" href="{{link}}?download=true" download="#{name}") download file
     else
-      h1.files-note: i.fa.fa-fw.fa-spin.fa-spinner
+      h3.files-note
+        i.glyphicon.glyphicon-refresh.glyphicon-spin
     
     | {{name}}
   a.fileDownload.fileItem.thumbnail(href='{{data}}', style='display: none', target="_blank")
@@ -28,7 +29,7 @@ template(name="file")
             button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
             h4#myModalLabel.modal-title File: {{name}}
           .modal-body
-              a(href="{{data}}",target="_blank")
+              a(href="{{link}}",target="_blank")
                 source(type="#{type}" srcset="{{link}}")
                 img.file-preview(src="{{link}}" alt="#{name}")
           .modal-footer

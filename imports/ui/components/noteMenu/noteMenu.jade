@@ -29,11 +29,11 @@ template(name='noteMenu')
           |  {{_ 'notes.menu.moveTo'}}
           span.keyboardShortcutHint ⌘ + ⇧ + M
 
-        if currentUser.isAdmin
-          a.upload.mdl-menu__item(href='#')
-            i.glyphicon.glyphicon-upload
-            |  {{_ 'notes.menu.upload'}}
-            span.keyboardShortcutHint ⌘ + ⇧ + U
+        //- if currentUser.isAdmin
+        a.upload.mdl-menu__item(href='#')
+          i.glyphicon.glyphicon-upload
+          |  {{_ 'notes.menu.upload'}}
+          span.keyboardShortcutHint ⌘ + ⇧ + U
           
         a.share.mdl-menu__item(href='#', data-toggle='modal', data-target='#share_{{_id}}')
           i.glyphicon.glyphicon-share

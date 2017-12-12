@@ -8,7 +8,9 @@ template(name="menu")
 
       if currentUser
         .mdl-layout-spacer
-          | Notes: {{getCount 'notes.count.user'}}
+          p Space used: {{getFileSize currentUser.uploadedFilesSize}}
+          p Space available: {{maxFileUpload}}
+          p Notes: {{getCount 'notes.count.user'}}
           if currentUser.isPro
             | Thank you for upgrading to Pro!
           else
