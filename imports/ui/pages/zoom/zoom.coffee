@@ -249,7 +249,11 @@ Template.App_zoom.onRendered ->
 
     childCount 0, root
     newHeight = d3.max(levelWidth) * 25
+<<<<<<< HEAD
     # 25 pixels per line
+=======
+    # 25 pixels per line  
+>>>>>>> 0830c9f45a5632554a3835622fd20bc8d0ab8858
     tree = tree.size([
       newHeight
       viewerWidth
@@ -319,7 +323,11 @@ Template.App_zoom.onRendered ->
     )
     # Enter any new links at the parent's previous position.
     link.enter().insert('path', 'g').attr('class', 'link').attr 'd', (d) ->
+<<<<<<< HEAD
       o =
+=======
+      o = 
+>>>>>>> 0830c9f45a5632554a3835622fd20bc8d0ab8858
         x: source.x0
         y: source.y0
       diagonal
@@ -329,7 +337,11 @@ Template.App_zoom.onRendered ->
     link.transition().duration(duration).attr 'd', diagonal
     # Transition exiting nodes to the parent's new position.
     link.exit().transition().duration(duration).attr('d', (d) ->
+<<<<<<< HEAD
       o =
+=======
+      o = 
+>>>>>>> 0830c9f45a5632554a3835622fd20bc8d0ab8858
         x: source.x
         y: source.y
       diagonal
