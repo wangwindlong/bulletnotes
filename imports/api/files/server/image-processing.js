@@ -3,11 +3,12 @@ import { check }  from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 
 import fs from 'fs-extra';
-import gm from 'gm';
+
+gm = require('gm')
+im = gm.subClass({imageMagick: true})
+
 //Some platforms may bundle ImageMagick into their tools (like Heroku). In this case you may use GraphicsMagick as Imagemagick in this way:
 //npm install gm --save and then where you use it:
-//const gm = require('gm');
-//const im = gm.subClass({ imageMagick: true });
 //Please note that GM was considered slightly faster than IM so before you chose convenience over performance read the latest news about it.
 //https://mazira.com/blog/comparing-speed-imagemagick-graphicsmagick
 
