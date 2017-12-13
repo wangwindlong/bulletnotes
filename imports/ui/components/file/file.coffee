@@ -24,7 +24,6 @@ Template.file.onCreated ->
   #       $('.modal-backdrop').fadeOut().remove()
 
 Template.file.onRendered ->
-  `var promise`
   @warning.set false
   @fetchedText.set false
 

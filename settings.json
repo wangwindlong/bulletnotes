@@ -14,7 +14,8 @@
     "url": "http://localhost:3123",
     "stripePublicKey": "",
     "proPrice": "",
-    "maxFreeUploadBits": 262144000
+    "maxFreeUploadBits": 104857600,
+    "maxProUploadBits": 1073741824
   },
   "telegramKey": "",
   "stripeSecretKey": "",

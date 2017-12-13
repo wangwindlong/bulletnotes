@@ -8,14 +8,14 @@ template(name="menu")
 
       if currentUser
         .mdl-layout-spacer
-          p Space used: {{getFileSize currentUser.uploadedFilesSize}}
-          p Space available: {{maxFileUpload}}
-          p Notes: {{getCount 'notes.count.user'}}
+          p File Space: {{getFileSize currentUser.uploadedFilesSize}} / {{maxFileUpload}}
+          #fileSpaceUsedBar.mdl-progress.mdl-js-progress
           if currentUser.isPro
             | Thank you for upgrading to Pro!
           else
-            | Limit: {{totalNotesAllowed}} Referrals: {{referralCount}}
-          #spaceUsedBar.mdl-progress.mdl-js-progress
+            p Note Space: {{getCount 'notes.count.user'}} / {{totalNotesAllowed}}
+            #noteSpaceUsedBar.mdl-progress.mdl-js-progress
+            a(href='/account') Get More Space
         .buttonWrap
           if hideUndoButton
             button#undo.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect
@@ -48,9 +48,9 @@ template(name="menu")
           a.mdl-menu__item.recentLink(href='/search/last-changed%3a1h') {{_ 'layouts.appBody.lastHour'}}
           a.mdl-menu__item.recentLink(href='/search/last-changed%3a24h') {{_ 'layouts.appBody.lastDay'}}
           a.mdl-menu__item.recentLink(href='/search/not-viewed%3a1M') {{_ 'layouts.appBody.oldItems'}}
-
+        //- +avatar(user=this shape="circle")
         button#userMenu.mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--accent.mdl-button--raised
-          i.material-icons account_box
+          img.avatar(src="{{avatar}}")
           | {{displayName}}
           i.material-icons expand_more
         div.mdl-menu.mdl-menu--bottom-left.mdl-js-menu.mdl-js-ripple-effect(for='userMenu')

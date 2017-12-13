@@ -1,12 +1,18 @@
 require './noteBody.jade'
 
+# import SimpleMDE from 'simplemde'
+# import '/node_modules/simplemde/src/css/simplemde.css';
+
 Template.noteBody.onRendered ->
+  that = this
   Tracker.autorun ->
     if this.data && this.data.body
       bodyHtml = Template.bulletNotes.formatText this.data.body
       $(this.firstNode).find('.body').first().show().html(
         bodyHtml
       )
+    # simplemde = new SimpleMDE
+    #   element: that.$('.body')[0]
 
 Template.noteBody.events
   'focus .body': (event, instance) ->

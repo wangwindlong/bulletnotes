@@ -36,6 +36,7 @@
     "request": "^2.83.0",
     "sanitize-html": "^1.14.1",
     "simpl-schema": "^0.1.1",
+    "simplemde": "^1.11.2",
     "stripe": "^5.3.0"
   },
   "devDependencies": {

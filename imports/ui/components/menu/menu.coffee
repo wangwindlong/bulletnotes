@@ -6,13 +6,17 @@ import filesize from 'filesize'
 
 require './menu.jade'
 
-Template.menu.onCreated ->
+Template.menu.onRendered ->
   setInterval ->
-    percentFull = Counter.get('userNotes') / Template.App_body.getTotalNotesAllowed() * 100
-    if document.querySelector('#spaceUsedBar')
-      document.querySelector('#spaceUsedBar').MaterialProgress.setProgress(percentFull);
+    notesPercentFull = Counter.get('notes.count.user') / Template.App_body.getTotalNotesAllowed() * 100
+    if document.querySelector('#noteSpaceUsedBar')
+      document.querySelector('#noteSpaceUsedBar').MaterialProgress.setProgress(notesPercentFull);
 
     if Meteor.user()
+      filesPercentFull = Meteor.user().uploadedFilesSize / Template.App_body.getUploadBitsAllowed() * 100 
+      if document.querySelector('#fileSpaceUsedBar')
+        document.querySelector('#fileSpaceUsedBar').MaterialProgress.setProgress(filesPercentFull);
+
       # THis is hacky. Should be somewhere else.
       if Meteor.user().language
         T9n.setLanguage(Meteor.user().language)
@@ -23,9 +27,8 @@ Template.menu.onCreated ->
           referral: Session.get 'referral' 
         }
         Session.set 'referral', null
-
-
   , 1000
+  
 
 Template.menu.helpers
   displayName: ->
@@ -122,10 +125,19 @@ Template.menu.helpers
       'mdl-button--colored'
 
   maxFileUpload: ->
-    filesize Meteor.settings.public.maxFreeUploadBits
+    filesize Template.App_body.getUploadBitsAllowed()
 
   getFileSize: (number) ->
-    filesize number
+    if number
+      filesize number
+    else
+      '0'
+  
+  avatar: ->
+    if Meteor.user().emails
+      Gravatar.imageUrl(Meteor.user().emails[0].address)
+    else if Meteor.user()
+      Avatar.getUrl(Meteor.user())
 
 Template.menu.events
   'click .menuToggle': (event, instance) ->

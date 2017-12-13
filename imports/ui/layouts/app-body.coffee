@@ -198,11 +198,20 @@ Template.App_body.onCreated ->
     $('.betaWarning,.devWarning').fadeOut()
   ), 5000
 
+Template.App_body.getUploadBitsAllowed = ->
+  if Meteor.user().isPro
+    Meteor.settings.public.maxProUploadBits
+  else
+    Meteor.settings.public.maxFreeUploadBits
+
 Template.App_body.getTotalNotesAllowed = ->
   if !Meteor.user()
     return 0
-  referrals = Meteor.user().referralCount || 0
-  Meteor.settings.public.noteLimit + (Meteor.settings.public.referralNoteBonus * referrals)
+  if Meteor.user().isPro
+    'Unlimited'
+  else
+    referrals = Meteor.user().referralCount || 0
+    Meteor.settings.public.noteLimit + (Meteor.settings.public.referralNoteBonus * referrals)
 
 Template.App_body.loadFavorite = (number) ->
   if Template.App_body.shouldNav() && $('.favoriteNote').get(number-1)
