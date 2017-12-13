@@ -63,17 +63,7 @@ Template.bulletNoteItem.onCreated ->
 
 Template.bulletNoteItem.onRendered ->
   noteElement = this
-  $('.fileItem').draggable
-    revert: true
 
-  $('.note-item').droppable
-    drop: (event, ui ) ->
-      console.log "Drop! ",event
-      if event.toElement && event.toElement.className.indexOf('fileItem') > -1
-        event.stopPropagation()
-        Meteor.call 'files.setNote',
-          fileId: event.toElement.dataset.id
-          noteId: event.target.dataset.id
   Session.set('expand_'+this.data._id, this.data.showChildren)
 
 Template.bulletNoteItem.helpers
@@ -642,13 +632,13 @@ Template.bulletNoteItem.events
   'dragleave .title, dragleave .filesContainer': (event, instance) ->
     $(event.currentTarget).closest('.noteContainer').removeClass 'dragging'
 
-  'drop .title, drop .filesContainer, drop .noteContainer': (event, instance) ->
+  'drop .noteContainer': (event, instance) ->
     event.preventDefault()
     event.stopPropagation()
-
+    console.log event, instance
     if event.toElement
       console.log "Move file!"
-    else
+    else if event.originalEvent.dataTransfer
       for file in event.originalEvent.dataTransfer.files
         Template.bulletNoteItem.upload file, instance
 

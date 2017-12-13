@@ -72,6 +72,23 @@ Template.bulletNotes.onCreated ->
 Template.bulletNotes.onRendered ->
   $('.title-wrapper').show()
   Template.App_body.recordEvent 'notesRendered', owner: @userId
+
+  setTimeout ->
+    $('.fileItem').draggable
+      revert: true
+
+    $('.noteContainer').droppable
+      drop: (event, ui ) ->
+        event.stopImmediatePropagation()
+        console.log "Drop! "
+        console.log event
+        console.log ui
+        console.log ui.draggable.context.dataset.id
+        console.log $(event.target).parent(), $(event.target).parent().data('id')
+        Meteor.call 'files.setNote',
+          fileId: ui.draggable.context.dataset.id
+          noteId: $(event.target).parent().data('id')
+  , 1500
   
 Template.bulletNotes.helpers
   notes: ->
