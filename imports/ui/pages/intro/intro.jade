@@ -5,8 +5,11 @@ template(name="App_intro")
             h1 
                 a(href='/') BulletNotes.io
             h2 Organize your life
-            a.register.mdl-button--raised.mdl-button.mdl-button--colored(href='/join') Create Free Account
-            a.signIn.mdl-button--raised.mdl-button.mdl-button--colored(href='/signin') Sign in
+            if currentUser
+              a.register.mdl-button--raised.mdl-button.mdl-button--colored(href='/') Your Notes
+            else
+              a.register.mdl-button--raised.mdl-button.mdl-button--colored(href='/join') Create Free Account
+              a.signIn.mdl-button--raised.mdl-button.mdl-button--colored(href='/signin') Sign in
             a.signIn.mdl-button--raised.mdl-button.mdl-button--colored(href='https://telegram.me/bulletnotesbot',target='_blank') Get started on Telegram
 
         .intro-media
