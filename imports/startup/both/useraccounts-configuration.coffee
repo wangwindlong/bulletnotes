@@ -5,7 +5,9 @@ import { Meteor } from 'meteor/meteor';
 mySubmitFunc = (error, state) ->
   if !error
     if state == 'signIn'
-      FlowRouter.go '/'
+      setTimeout ->
+        FlowRouter.go '/'
+      , 250
       # Successfully logged in
     if state == 'signUp'
       user = Meteor.user()

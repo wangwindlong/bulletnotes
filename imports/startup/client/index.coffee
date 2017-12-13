@@ -1,11 +1,6 @@
 import './routes.coffee'
 
 Meteor.startup ->
-    Accounts.onLogin ->
-        console.log "Login!"
-        setTimeout ->
-            FlowRouter.go '/'
-        , 250
     $(document).on 'keyup', (event) ->
         if !Session.get 'focused'
             switch event.keyCode
