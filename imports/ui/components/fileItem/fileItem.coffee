@@ -3,11 +3,11 @@
 { Notes } = require '/imports/api/notes/notes.coffee'
 { Files } = require '/imports/api/files/files.coffee'
 
-require './file.jade'
+require './fileItem.jade'
 
-Template.file.isImage = true
+Template.fileItem.isImage = true
 
-Template.file.onCreated ->
+Template.fileItem.onCreated ->
   @showOriginal = new ReactiveVar(false)
   @fetchedText = new ReactiveVar(false)
   @showPreview = new ReactiveVar(false)
@@ -23,14 +23,15 @@ Template.file.onCreated ->
   #     , (err, res) ->
   #       $('.modal-backdrop').fadeOut().remove()
 
-Template.file.onRendered ->
+Template.fileItem.onRendered ->
   @warning.set false
   @fetchedText.set false
 
   that = this
-  if @data.isText or @data.isJSON
-    if @data.size < 1024 * 64
-      HTTP.call 'GET', @data.link(), (error, resp) ->
+  console.log this
+  if @data.file.isText or @data.file.isJSON
+    if @data.file.size < 1024 * 64
+      HTTP.call 'GET', @data.file.link(), (error, resp) ->
         that.showPreview.set true
         if error
           console.error error
@@ -47,10 +48,10 @@ Template.file.onRendered ->
         return
     else
       @warning.set true
-  else if @data.isImage
+  else if @data.file.isImage
     img = new Image
-    if /png|jpe?g/i.test(@data.type)
-      console.log "Got image! ",@data
+    if /png|jpe?g/i.test(@data.file.type)
+      console.log "Got image! ",@data.file
       handle = undefined
 
       img.onload = ->
@@ -61,12 +62,12 @@ Template.file.onRendered ->
         that.showError.set true
         return
 
-      if @data.versions and typeof @data.versions.preview != 'undefined' and @data.versions.preview.extension
-        img.src = @data.link('preview')
+      if @data.file.versions and typeof @data.file.versions.preview != 'undefined' and @data.file.versions.preview.extension
+        img.src = @data.file.link('preview')
       else
-        handle = Files.find(@data._id).observeChanges(changed: (_id, fields) ->
+        handle = Files.find(@data.file._id).observeChanges(changed: (_id, fields) ->
           if fields != null and fields.versions != null and fields.versions.preview != null and fields.versions.preview.extension
-            img.src = that.data.link('preview')
+            img.src = that.data.file.link('preview')
             handle.stop()
           return
         )
@@ -80,9 +81,9 @@ Template.file.onRendered ->
         that.showError.set true
         return
 
-      img.src = @data.link()
+      img.src = @data.file.link()
 
-Template.file.helpers
+Template.fileItem.helpers
   warning: ->
     Template.instance().warning.get()
   getCode: ->
@@ -104,7 +105,7 @@ Template.file.helpers
   showModal: ->
     Template.instance().showModal.get()
 
-Template.file.events
+Template.fileItem.events
 
   'click [data-show-info]': (e, template) ->
     e.preventDefault()

@@ -34,6 +34,26 @@ Template.kanbanList.helpers
     else
       '( Click to add a title )'
 
+  kanbanListTitleArgs: (note) ->
+    data = {
+      note: note
+    }
+    console.log data
+    return data
+
+  kanbanListBodyArgs: (note) ->
+    data = {
+      note: note
+    }
+    console.log data
+    return data
+
+  fileArgs: (file) ->
+    {
+      file: file
+      note: Notes.findOne file.noteId
+    }
+
 Template.kanbanList.events
   'click footer': (event, instance) ->
     parent = instance.data._id

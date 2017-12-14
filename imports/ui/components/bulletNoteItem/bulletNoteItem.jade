@@ -15,7 +15,7 @@ template(name='bulletNoteItem')
         
         .handle.noteNumber {{count}}
 
-      +noteTitle
+      +noteTitle(titleArgs this)
 
       if progress
         .progress.progress-striped(data-toggle="tooltip", data-placement="top", title="{{progress}}% Complete", data-original-title="{{progress}}% Complete")
@@ -27,16 +27,16 @@ template(name='bulletNoteItem')
         +noteDetailCard
 
       if showContent
-        +noteBody
-        if hasContent
-          if files
-            .filesContainer
-              each files.each
-                +file
-          a.hideContent(id="hideContent_{{_id}}")
-            i.glyphicon.glyphicon-chevron-up
-          .mdl-tooltip.mdl-tooltip--large(for='hideContent_{{_id}}')
-            | {{_ 'notes.tooltips.hide_content'}}
+        if showBody
+          +noteBody(bodyArgs this)
+        if files
+          .filesContainer
+            each file in files.each
+              +fileItem(fileArgs file)
+        a.hideContent(id="hideContent_{{_id}}")
+          i.glyphicon.glyphicon-chevron-up
+        .mdl-tooltip.mdl-tooltip--large(for='hideContent_{{_id}}')
+          | {{_ 'notes.tooltips.hide_content'}}
       else
         if hasContent
           a.showContent(id="showContent_{{_id}}")

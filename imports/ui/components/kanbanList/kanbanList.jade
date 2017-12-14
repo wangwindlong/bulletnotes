@@ -2,8 +2,8 @@ template(name='kanbanList')
   .kanbanList(class=className, data-id="{{_id}}")
     header
       +noteMenu
-      +noteTitle
-      +noteBody
+      +noteTitle(note=this)
+      +noteBody(kanbanListBodyArgs this)
     if photo
       img(src=photo,width="100%")
     

@@ -23,6 +23,9 @@ Template.noteMenu.helpers
   showMoveTo: ->
     Template.instance().state.get 'showMoveTo'
 
+  noBody: ->
+    !Template.instance().data.body
+
 Template.noteMenu.events
 
   'click .menuToggle': (event, instance) ->

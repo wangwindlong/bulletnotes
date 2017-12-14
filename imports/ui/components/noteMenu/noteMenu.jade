@@ -9,11 +9,12 @@ template(name='noteMenu')
           i.glyphicon.glyphicon-search
           |  {{_ 'notes.menu.zoom'}}
           span.keyboardShortcutHint ⌘ + ]
-          
-        a.addBody.mdl-menu__item(href='#')
-          i.glyphicon.glyphicon-info-sign
-          |  {{_ 'notes.menu.addBody'}}
-          span.keyboardShortcutHint ⇧ + Enter
+        
+        if noBody
+          a.addBody.mdl-menu__item(href='#')
+            i.glyphicon.glyphicon-info-sign
+            |  {{_ 'notes.menu.addBody'}}
+            span.keyboardShortcutHint ⇧ + Enter
           
         if favorite
           a.unfavorite.mdl-menu__item(href='#')

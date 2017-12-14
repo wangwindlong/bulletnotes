@@ -1,0 +1,37 @@
+template(name="fileItem")
+  a.noteImage.noteItem.thumbnail(href='#', data-id='{{file._id}}')
+    a.delete.glyphicon.glyphicon-remove(data-id="{{file._id}}")
+    if showPreview
+      source(type="#{type}" srcset="{{file.link 'preview'}}")
+      img.note-preview(src="{{file.link 'preview'}}" alt="#{file.name}")
+    else if showOriginal
+      source(type="#{type}" srcset="{{file.link}}")
+      img.note-preview(src="{{file.link}}" alt="#{file.name}")
+    else if showError
+      h3.notes-note
+        | Browser can't display this image. The "#{file.type}" format may be not supported in your browser. Please
+        a(title="Download \"#{file.name}\"" href="{{link}}?download=true" download="#{file.name}") download note
+    else
+      h3.notes-note
+        i.glyphicon.glyphicon-refresh.glyphicon-spin
+    
+    | {{file.name}}
+  a.noteDownload.noteItem.thumbnail(href='{{file.data}}', style='display: none', target="_blank")
+    a.delete.glyphicon.glyphicon-remove(data-id="{{file._id}}")
+    .glyphicon.glyphicon-note
+    | {{file.name}}
+  if showModal
+    a.modalTrigger(data-toggle='modal', data-target='#note_{{file._id}}',style='display:none;')
+    .modal.fade.noteModal(id="note_{{file._id}}", tabindex='-1', role='dialog', style='display: none;')
+      .modal-dialog
+        form.modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h4#myModalLabel.modal-title note: {{file.name}}
+          .modal-body
+              a(href="{{file.link}}",target="_blank")
+                source(type="#{file.type}" srcset="{{lfile.ink}}")
+                img.note-preview(src="{{file.link}}" alt="#{name}")
+          .modal-footer
+            a.btn.btn-sm.delete(data-id="{{file._id}}") Delete
+            button.btn.btn-sm(data-dismiss='modal') Cancel

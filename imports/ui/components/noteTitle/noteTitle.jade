@@ -1,8 +1,8 @@
 template(name='noteTitle')
   .noteTitle(class=className)
-    if encryptedRoot
+    if note.encryptedRoot
       i.glyphicon.glyphicon-eye-close.encryptedIcon(title='This note is encrypted')
-    if displayEncrypted
+    if note.displayEncrypted
       div(class='encryptedTitle')
     else
       if editable

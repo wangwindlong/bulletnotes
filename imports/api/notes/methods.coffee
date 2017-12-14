@@ -455,9 +455,10 @@ export setShowContent = new ValidatedMethod
   validate: new SimpleSchema
     noteId: Notes.simpleSchema().schema('_id')
     showContent: type: Boolean
+    shareKey: Notes.simpleSchema().schema('shareKey')
   .validator
     clean: yes
-  run: ({ noteId, showContent = true, shareKey = null }) ->
+  run: ({ noteId, showContent, shareKey = null }) ->
     if !@userId || !Notes.isEditable noteId, shareKey
       throw new (Meteor.Error)('not-authorized')
 
