@@ -61,6 +61,8 @@ Template.calendar.onRendered ->
       notes = Notes.find { date: {$exists: true} }
 
     $('#calendar').fullCalendar 'removeEvents'
+    $('.imageWrap').remove()
+
     notes.forEach (row) ->
       Meteor.subscribe 'files.note', row._id
       file = Files.findOne { noteId: row._id }
@@ -75,11 +77,9 @@ Template.calendar.onRendered ->
       }
       $('#calendar').fullCalendar 'renderEvent', event, true
       events.push event
-      console.log row
       if file
-        console.log file, file.link()
         date = moment.utc(row.date).format('YYYY-MM-DD')
-        $('.fc-day[data-date="'+date+'"]').css('background-image', 'url(' + file.link('preview') + ')');
+        $('.fc-day[data-date="'+date+'"]').append('<div class="imageWrap"><img src="'+file.link('preview') + '" /></div>')
 
     setTimeout () ->
       $('.fc-today-button').click()

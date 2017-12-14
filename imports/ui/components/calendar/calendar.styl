@@ -14,9 +14,23 @@
   color: white
 
 .fc-day
-  background-size: 100%
-  background-repeat: no-repeat
-  background-position: center
+  position: relative
+
+.imageWrap
+  position: absolute
+  top: 0
+  left: 0
+  bottom: 0
+  right: 0
+  display: flex
+  justify-content: center
+  align-items: center
+  overflow: hidden
+  img
+    flex-shrink:0
+    min-width:100%
+    min-height:100%
+    max-width:100%
 
 .fc-day-number
   text-shadow: 2px 2px white
