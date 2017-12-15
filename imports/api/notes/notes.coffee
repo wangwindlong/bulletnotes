@@ -35,7 +35,7 @@ Notes.getSharedParent = (id, shareKey) ->
 
 Notes.isOwner = (id) ->
   note = Notes.findOne id
-  note && Meteor.user()._id == note.owner
+  note && Meteor.userId() == note.owner
 
 Notes.filterBody = (body) ->
   if !body

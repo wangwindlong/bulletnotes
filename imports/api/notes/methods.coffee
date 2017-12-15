@@ -342,7 +342,7 @@ export makeChild = new ValidatedMethod
   run: ({ noteId, parent = null, shareKey = null, upperSibling = null, rank = null, expandParent = true }) ->
     if !@userId || !Notes.isEditable noteId, shareKey
       throw new (Meteor.Error)('not-authorized')
-    console.log "Rank: ", rank
+
     note = Notes.findOne(noteId)
     if !note
       throw new (Meteor.Error)('note-not-found')

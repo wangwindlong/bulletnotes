@@ -1,5 +1,7 @@
 require './noteTitle.jade'
 
+import { Notes } from '/imports/api/notes/notes.coffee'
+
 Template.noteTitle.onCreated ->
   console.log "Render title: ",this
   @state = new ReactiveDict()
@@ -64,10 +66,6 @@ Template.noteTitle.saveTitle = (event, instance) ->
         instance.state.set 'dirty', false
 
 Template.noteTitle.events
-  'click .title': (event, instance) ->
-    if instance.view.parentView.templateInstance().state
-      instance.view.parentView.templateInstance().state.set 'focused', true
-
   'focus .title': (event, instance) ->
     Session.set 'focused', true
     Template.bulletNoteItem.addAutoComplete event.currentTarget
@@ -85,7 +83,6 @@ Template.noteTitle.events
       FlowRouter.go(event.target.pathname)
   
   'keydown .title': (event, instance) ->
-    note = this
     event.stopImmediatePropagation()
     switch event.keyCode
       # Cmd ] - Zoom in
@@ -119,8 +116,8 @@ Template.noteTitle.events
             # Create a new note below the current.
             Meteor.call 'notes.insert', {
               title: ''
-              rank: note.rank + 0.5
-              parent: note.parent
+              rank: instance.data.note.rank + 0.5
+              parent: instance.data.note.parent
               shareKey: FlowRouter.getParam('shareKey')
             }, (err, res) ->
               if err
@@ -172,7 +169,7 @@ Template.noteTitle.events
       when 68
         if event.metaKey || event.ctrlKey
           event.preventDefault()
-          Meteor.call 'notes.duplicate', instance.data._id
+          Meteor.call 'notes.duplicate', instance.data.note._id
 
       # Tab
       when 9
@@ -180,16 +177,16 @@ Template.noteTitle.events
 
         # First save the title in case it was changed.
         title = Template.bulletNoteItem.stripTags(event.target.innerHTML)
-        if title != @title
+        if title != instance.data.note.title
           Meteor.call 'notes.updateTitle',
-            noteId: @_id
+            noteId: instance.data.note._id
             title: title
 
             # FlowRouter.getParam 'shareKey'
         parent_id = Blaze.getData(
           $(event.currentTarget).closest('.note-item').prev().get(0)
         )._id
-        noteId = @_id
+        noteId = instance.data.note._id
         if event.shiftKey
           Meteor.call 'notes.outdent', {
             noteId: noteId
@@ -200,7 +197,7 @@ Template.noteTitle.events
         else
           childCount = Notes.find({parent: parent_id}).count()
           Meteor.call 'notes.makeChild', {
-            noteId: @_id
+            noteId: noteId
             parent: parent_id
             rank: (childCount*2)+1
             shareKey: FlowRouter.getParam 'shareKey'
