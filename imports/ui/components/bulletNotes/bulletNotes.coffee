@@ -97,6 +97,10 @@ Template.bulletNotes.helpers
     if @note()
       parentId = @note()._id
 
+    Meteor.subscribe 'notes.children',
+      parentId
+      FlowRouter.getParam 'shareKey'
+
     if FlowRouter.getParam 'searchTerm'
       Notes.search FlowRouter.getParam 'searchTerm'
     else if parentId

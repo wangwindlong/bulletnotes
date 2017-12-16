@@ -14,6 +14,7 @@ import '/imports/ui/components/calendar/calendar.coffee'
 import '/imports/ui/components/map/map.coffee'
 
 Template.Notes_show_page.onCreated ->
+  console.log "Rendering notes show page"
   if !Meteor.user() && !Session.get 'introLoaded'
       FlowRouter.go '/intro'
 

@@ -58,6 +58,15 @@ FlowRouter.route '/note/:noteId/:shareKey',
   name: 'Notes.showShared'
   action: ->
     NProgress.start()
+
+    Meteor.subscribe 'notes.view',
+      FlowRouter.getParam 'noteId'
+      FlowRouter.getParam 'shareKey'
+    note = Notes.findOne FlowRouter.getParam 'noteId',
+      fields:
+        title: yes
+
+
     BlazeLayout.render 'App_body', main: 'Notes_show_page'
 
 FlowRouter.route '/search/:searchTerm',

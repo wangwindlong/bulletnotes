@@ -20,9 +20,9 @@ template(name='share')
                 input.shareUrl(value="{{shareUrl}}",size='60')
                 i.fa.fa-copy(style='cursor:pointer')
               p 
-                a.stopSharing Stop Sharing
+                a.mdl-button--raised.mdl-button.mdl-button--colored.stopSharing Stop Sharing
             else
-              input(type='submit',value='View',class='submit btn btn-theme viewShare')
-              input(type='submit',value='Edit',class='submit btn btn-theme editShare')
+              p: input.mdl-button--raised.mdl-button.mdl-button--colored(type='submit',value='Create View Only Link',class='viewShare')
+              p: input.mdl-button--raised.mdl-button.mdl-button--colored(type='submit',value='Create Editable Link',class='editShare')
         .modal-footer
           button.btn.btn-sm(data-dismiss='modal') Cancel

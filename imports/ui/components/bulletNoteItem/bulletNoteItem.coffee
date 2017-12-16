@@ -91,6 +91,9 @@ Template.bulletNoteItem.helpers
       (@showChildren && !FlowRouter.getParam('searchParam')) ||
       Session.get('expand_'+@_id)
     )
+      Meteor.subscribe 'notes.children',
+        @_id
+        FlowRouter.getParam 'shareKey'
       if (Template.instance().state.get('showComplete') || Session.get('alwaysShowComplete'))
         Notes.find { parent: @_id }, sort: { complete: 1, rank: 1 }
       else
