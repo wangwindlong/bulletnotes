@@ -211,12 +211,12 @@ Template.noteTitle.events
         if $('.textcomplete-dropdown:visible').length
           # We're showing a dropdown, don't do anything.
           return
-
+        
         # If the note is empty and hit delete again, or delete with ctrl key
         if event.currentTarget.innerText.trim().length == 0 || event.ctrlKey
           $(event.currentTarget).closest('.note-item').fadeOut()
           Meteor.call 'notes.remove',
-            noteId: @_id
+            noteId: instance.data.note._id
             shareKey: FlowRouter.getParam 'shareKey'
           Template.bulletNoteItem.focus $(event.currentTarget).closest('.note-item').prev()[0]
           return
