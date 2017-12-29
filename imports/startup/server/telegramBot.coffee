@@ -1,9 +1,50 @@
 import { Accounts } from 'meteor/accounts-base'
+{ Files } = require '/imports/api/files/server/files.coffee'
+
+request = require('request')
+https = require('https')
+fs = require('fs')
 
 if Meteor.isServer
   Meteor.startup ->
     TelegramBot.token = Meteor.settings.telegramKey
     TelegramBot.start()
+
+    TelegramBot.uploadFile = (data, uploadItem, noteId) ->
+      console.log "Got data:", data
+      user = TelegramBot.getUser data
+      if !user
+        false
+      TelegramBot.send 'File received! Processing..', data.chat.id
+
+      fileName = TelegramBot.method('getFile', file_id: uploadItem.file_id).result.file_path
+      file = fs.createWriteStream(uploadItem.file_id)
+      request = Meteor.wrapAsync https.get('https://api.telegram.org/file/bot' + TelegramBot.token + '/' + fileName, (response) ->
+        response.pipe file
+        file.on 'finish', ->
+          file.close ->
+            Files.addFile uploadItem.file_id,
+              {
+                fileName: uploadItem.file_name
+                userId: user._id
+                name: uploadItem.file_name
+                type: uploadItem.mime_type
+              },
+              (err, fileRef) ->
+                console.log "Error: ",err
+                console.log "FileRef: ",fileRef
+                Files.update fileRef._id, $set:
+                  noteId: noteId
+                TelegramBot.send 'File processed! View at ' + Meteor.settings.public.url + '/note/' +noteId, data.chat.id
+              , true
+      ).on('error', (err) ->
+        console.log "Got an error!"
+        # Handle errors
+        fs.unlink dest
+        # Delete the file async. (But we don't check the result)
+        if cb
+          cb err.message
+      )
 
     TelegramBot.getUser = (data) ->
       user = Meteor.users.findOne({telegramId:data.chat.id.toString()})
@@ -24,6 +65,7 @@ if Meteor.isServer
 
     TelegramBot.setCatchAllText true, (_, message) ->
       user = TelegramBot.getUser message
+
       if !user
         return false
 
@@ -32,6 +74,71 @@ if Meteor.isServer
         userId: user._id
       , (err, res) ->
         TelegramBot.send res, message.chat.id, true
+
+    TelegramBot.addListener 'incoming_photo', ((command, username, data) ->
+      console.log data
+      TelegramBot.uploadFile data
+    ), 'photo'
+
+    TelegramBot.addListener 'incoming_voice', ((command, username, data) ->
+      console.log data
+      TelegramBot.uploadFile data, data.voice, "wRvx8kXDSqLLZyqjh"
+    ), 'voice'
+
+    TelegramBot.addListener 'incoming_caption', ((command, username, data) ->
+      console.log data
+      user = Meteor.users.findOne({telegramId:data.chat.id.toString()})
+      # Use either the document, or a video if available
+      doc = data.document || data.video || data.photo
+      noteId = Meteor.call 'notes.inbox',
+        title: data.caption
+        userId: user._id
+      TelegramBot.uploadFile data, doc, noteId
+    ), 'caption'
+
+    TelegramBot.addListener 'incoming_caption', ((command, username, data) ->
+      console.log data
+      user = Meteor.users.findOne({telegramId:data.chat.id.toString()})
+      # Use either the document, or a video if available
+      doc = data.document || data.video || data.photo
+      doc = doc[doc.length-1]
+      noteId = Meteor.call 'notes.inbox',
+        title: data.caption
+        userId: user._id
+      TelegramBot.uploadFile data, doc, noteId
+    ), 'caption_entities'
+
+    TelegramBot.addListener 'incoming_contact', ((command, username, data) ->
+      console.log "Got contact:",data
+    ), 'contact'
+
+    TelegramBot.addListener 'incoming_location', ((command, username, data) ->
+      TelegramBot.uploadFile data
+    ), 'location'
+
+    TelegramBot.addListener 'incoming_document', ((command, username, data) ->
+      user = Meteor.users.findOne({telegramId:data.chat.id.toString()})
+      noteId = Meteor.call 'notes.inbox',
+        title: "Telegram File Upload"
+        userId: user._id
+      TelegramBot.uploadFile data, data.document, noteId
+    ), 'document'
+
+    TelegramBot.addListener 'incoming_video', ((command, username, data) ->
+      user = Meteor.users.findOne({telegramId:data.chat.id.toString()})
+      noteId = Meteor.call 'notes.inbox',
+        title: "Telegram Video Upload"
+        userId: user._id
+      TelegramBot.uploadFile data, data.video, noteId
+    ), 'video'
+
+    TelegramBot.addListener 'incoming_audio', ((command, username, data) ->
+      user = Meteor.users.findOne({telegramId:data.chat.id.toString()})
+      noteId = Meteor.call 'notes.inbox',
+        title: "Telegram Audio Upload"
+        userId: user._id
+      TelegramBot.uploadFile data, data.audio, noteId
+    ), 'audio'
 
     TelegramBot.addListener '/start', (command, username, data) ->
       user = TelegramBot.getUser data

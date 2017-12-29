@@ -45,6 +45,9 @@ Clone the repo.
 
 ```
 cd BulletNotes
+meteor npm install
+meteor npm install --save-dev meteor-desktop
+meteor npm install --save gm
 npm start
 ```
 

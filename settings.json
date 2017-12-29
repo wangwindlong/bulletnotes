@@ -1,4 +1,6 @@
 {
+  "name": "BulletNotes.io",
+  "version": "0.0.1",
   "public": {
     "dropbox_client_id": "",
     "dev": 1,

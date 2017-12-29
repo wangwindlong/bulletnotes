@@ -511,9 +511,9 @@ Template.bulletNoteItem.upload = (file, template) ->
         Meteor.call 'files.setNote',
             noteId: template.data._id
             fileId: fileObj._id
-          setShowContent.call
-            noteId: template.data._id
-            showContent: true
+        setShowContent.call
+          noteId: template.data._id
+          showContent: true
 
       template.currentUpload.set false
 

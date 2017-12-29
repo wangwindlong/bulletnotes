@@ -160,9 +160,6 @@ Files.on 'afterUpload', (fileRef) ->
               ), 2048
             else
               console.error 'client.makeUrl doesn\'t returns xml', triesUrl: triesUrl
-          return
-        return
-      return
 
     writeToDB = (fileRef, version, data, triesSend = 0) ->
       # DropBox already uses random URLs
@@ -175,15 +172,11 @@ Files.on 'afterUpload', (fileRef) ->
               Meteor.setTimeout (->
                 # Write file to DropBox
                 writeToDB fileRef, version, data, ++triesSend
-                return
               ), 2048
             else
               console.error error, triesSend: triesSend
           else
             makeUrl stat, fileRef, version
-          return
-        return
-      return
 
     readFile = (fileRef, vRef, version, triesRead = 0) ->
       fs.readFile vRef.path, (error, data) ->
@@ -195,18 +188,12 @@ Files.on 'afterUpload', (fileRef) ->
               console.error error
           else
             writeToDB fileRef, version, data
-          return
-        return
-      return
 
     sendToStorage = (fileRef) ->
       _.each fileRef.versions, (vRef, version) ->
         readFile fileRef, vRef, version
-        return
-      return
 
   else if useS3
-
     sendToStorage = (fileRef) ->
       _.each fileRef.versions, (vRef, version) ->
         # We use Random.id() instead of real file's _id
@@ -235,22 +222,17 @@ Files.on 'afterUpload', (fileRef) ->
                   # Unlink original file from FS
                   # after successful upload to AWS:S3
                   that.unlink that.collection.findOne(fileRef._id), version
-                return
-            return
-          return
-        return
-      return
-      
+
   if /png|jpe?g/i.test(fileRef.extension or '')
     createThumbnails this, fileRef, (error, fileRef) ->
       if error
         console.error error
       if useDropBox or useS3
         sendToStorage that.collection.findOne(fileRef._id)
-      return
   else
     if useDropBox or useS3
       sendToStorage fileRef
+
 # This line now commented due to Heroku usage
 # Collections.files.collection._ensureIndex {'meta.expireAt': 1}, {expireAfterSeconds: 0, background: true}
 # Intercept FileCollection's remove method
@@ -269,8 +251,6 @@ if useDropBox or useS3
               bound ->
                 if error
                   console.error error
-                return
-              return
           else
             # AWS:S3 usage:
             client.deleteObject {
@@ -280,10 +260,5 @@ if useDropBox or useS3
               bound ->
                 if error
                   console.error error
-                return
-              return
-        return
-      return
     # Call original method
     _origRemove.call this, search
-    return

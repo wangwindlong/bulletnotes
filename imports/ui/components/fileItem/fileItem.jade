@@ -1,5 +1,5 @@
 template(name="fileItem")
-  a.noteImage.noteItem.thumbnail(href='#', data-id='{{file._id}}')
+  a.fileImage.thumbnail(href='#', data-id='{{file._id}}')
     a.delete.glyphicon.glyphicon-remove(data-id="{{file._id}}")
     if showPreview
       source(type="#{type}" srcset="{{file.link 'preview'}}")
@@ -16,13 +16,13 @@ template(name="fileItem")
         i.glyphicon.glyphicon-refresh.glyphicon-spin
     
     | {{file.name}}
-  a.noteDownload.noteItem.thumbnail(href='{{file.data}}', style='display: none', target="_blank")
+  a.fileDownload.thumbnail(href='{{file.data}}', style='display: none', target="_blank")
     a.delete.glyphicon.glyphicon-remove(data-id="{{file._id}}")
     .glyphicon.glyphicon-note
     | {{file.name}}
   if showModal
     a.modalTrigger(data-toggle='modal', data-target='#note_{{file._id}}',style='display:none;')
-    .modal.fade.noteModal(id="note_{{file._id}}", tabindex='-1', role='dialog', style='display: none;')
+    .modal.fade.fileModal(id="note_{{file._id}}", tabindex='-1', role='dialog', style='display: none;')
       .modal-dialog
         form.modal-content
           .modal-header
