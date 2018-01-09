@@ -372,7 +372,6 @@ export makeChild = new ValidatedMethod
         showChildren: true
         childrenLastShown: new Date
       }, {tx: true }
-    console.log "Rank: ", rank
     Notes.update noteId, {$set:
       rank: rank
       parent: parentId
@@ -385,9 +384,8 @@ export makeChild = new ValidatedMethod
     if parent
       Meteor.call 'notes.denormalizeChildCount',
         noteId: parent._id
-
-    Meteor.call 'notes.denormalizeRanks',
-      noteId: parentId
+      Meteor.call 'notes.denormalizeRanks',
+        noteId: parent._id
 
 
 removeRun = (note) ->

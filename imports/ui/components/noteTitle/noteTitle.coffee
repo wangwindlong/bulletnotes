@@ -276,10 +276,11 @@ Template.noteTitle.events
                 setTimeout ->
                   Template.bulletNoteItem.focus item[0]
                 , 100
+                console.log instance.data
 
                 Meteor.call 'notes.makeChild', {
-                  noteId: instance.data._id
-                  parent: instance.data.parent
+                  noteId: instance.data.note._id
+                  parent: instance.data.note.parent
                   upperSibling: upperSibling.data._id
                   shareKey: FlowRouter.getParam 'shareKey'
                 }
@@ -315,8 +316,8 @@ Template.noteTitle.events
               upperSibling = view.templateInstance()
 
               Meteor.call 'notes.makeChild', {
-                noteId: instance.data._id
-                parent: instance.data.parent
+                noteId: instance.data.note._id
+                parent: instance.data.note.parent
                 upperSibling: upperSibling.data._id
                 shareKey: FlowRouter.getParam 'shareKey'
               }

@@ -89,7 +89,16 @@ if Meteor.isServer
       console.log data
       user = Meteor.users.findOne({telegramId:data.chat.id.toString()})
       # Use either the document, or a video if available
-      doc = data.document || data.video || data.photo
+      docs = data.document || data.video || data.photo
+      console.log "Docs: ", docs
+      if Array.isArray docs
+        doc = docs[docs.length-1]
+        doc.file_path = docs[0].file_path
+      else
+        doc = docs
+      
+      console.log "Got doc: ", doc
+
       noteId = Meteor.call 'notes.inbox',
         title: data.caption
         userId: user._id
@@ -100,8 +109,16 @@ if Meteor.isServer
       console.log data
       user = Meteor.users.findOne({telegramId:data.chat.id.toString()})
       # Use either the document, or a video if available
-      doc = data.document || data.video || data.photo
-      doc = doc[doc.length-1]
+      docs = data.document || data.video || data.photo
+      console.log "Docs: ", docs
+      if isArray docs
+        doc = docs[docs.length-1]
+        doc.file_path = docs[0].file_path
+      else
+        doc = docs
+      
+      console.log "Got doc: ", doc
+
       noteId = Meteor.call 'notes.inbox',
         title: data.caption
         userId: user._id

@@ -8,7 +8,7 @@ import { Notes } from './notes.coffee'
 export default rankDenormalizer =
   updateChildren: (noteId) ->
     bulk = Notes.rawCollection().initializeUnorderedBulkOp()
-    siblings = Notes.find { parent: noteId }, sort: rank: 1
+    siblings = Notes.find { parent: noteId, deleted: {$exists: false} }, sort: rank: 1
     count = 0
     siblings.forEach (bro) ->
       count = count + 2
