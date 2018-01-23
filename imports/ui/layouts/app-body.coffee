@@ -83,15 +83,18 @@ Meteor.startup ->
   NProgress.start()
   # Only show the connection error box if it has been 5 seconds since
   # the app started
-  $(document).on 'keydown', (e) ->
+  $(document).on 'keyup', (event) ->
     editingNote = $(document.activeElement).hasClass('title')
     menuVisible = $('#container').hasClass('menu-open')
-    switch e.keyCode
+    switch event.keyCode
       # f - find / search
       when 70
         if Template.App_body.shouldNav()
+          event.preventDefault()
           $('.searchIcon').addClass('is-focused')
           $('.search').focus()
+          $(".mdl-layout__content").animate({ scrollTop: 0 }, 100)
+
       # ` Back Tick - toggle menu
       when 192
         if Template.App_body.shouldNav()
@@ -114,31 +117,31 @@ Meteor.startup ->
           FlowRouter.go('/')
       # 1
       when 49
-        Template.App_body.loadFavorite e, 1
+        Template.App_body.loadFavorite event, 1
       # 2
       when 50
-        Template.App_body.loadFavorite e, 2
+        Template.App_body.loadFavorite event, 2
       # 3
       when 51
-        Template.App_body.loadFavorite e, 3
+        Template.App_body.loadFavorite event, 3
       # 4
       when 52
-        Template.App_body.loadFavorite e, 4
+        Template.App_body.loadFavorite event, 4
       # 5
       when 53
-        Template.App_body.loadFavorite e, 5
+        Template.App_body.loadFavorite event, 5
       # 6
       when 54
-        Template.App_body.loadFavorite e, 6
+        Template.App_body.loadFavorite event, 6
       # 7
       when 55
-        Template.App_body.loadFavorite e, 7
+        Template.App_body.loadFavorite event, 7
       # 8
       when 56
-        Template.App_body.loadFavorite e, 8
+        Template.App_body.loadFavorite event, 8
       # 9
       when 57
-        Template.App_body.loadFavorite e, 9
+        Template.App_body.loadFavorite event, 9
 
   setTimeout (->
     # FIXME:
