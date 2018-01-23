@@ -53,7 +53,7 @@ Template.breadcrumbs.events
     $('input.search').val('')
 
     offset = $(event.currentTarget).offset()
-    $(".mdl-layout__content").animate({ scrollTop: 0 }, 500)
+    $(".mdl-layout__content").animate({ scrollTop: 0 }, 100)
     headerOffset = $('.title-wrapper').offset()
     $('.title-wrapper').fadeOut()
 
@@ -63,7 +63,7 @@ Template.breadcrumbs.events
       top: headerOffset.top
       color: 'white'
       fontSize: '20px'
-    }, ->
+    }, 100, 'swing', ->
       $('.zoomingTitle').remove()
       FlowRouter.go event.currentTarget.pathname
     )

@@ -114,31 +114,31 @@ Meteor.startup ->
           FlowRouter.go('/')
       # 1
       when 49
-        Template.App_body.loadFavorite 1
+        Template.App_body.loadFavorite e, 1
       # 2
       when 50
-        Template.App_body.loadFavorite 2
+        Template.App_body.loadFavorite e, 2
       # 3
       when 51
-        Template.App_body.loadFavorite 3
+        Template.App_body.loadFavorite e, 3
       # 4
       when 52
-        Template.App_body.loadFavorite 4
+        Template.App_body.loadFavorite e, 4
       # 5
       when 53
-        Template.App_body.loadFavorite 5
+        Template.App_body.loadFavorite e, 5
       # 6
       when 54
-        Template.App_body.loadFavorite 6
+        Template.App_body.loadFavorite e, 6
       # 7
       when 55
-        Template.App_body.loadFavorite 7
+        Template.App_body.loadFavorite e, 7
       # 8
       when 56
-        Template.App_body.loadFavorite 8
+        Template.App_body.loadFavorite e, 8
       # 9
       when 57
-        Template.App_body.loadFavorite 9
+        Template.App_body.loadFavorite e, 9
 
   setTimeout (->
     # FIXME:
@@ -213,8 +213,9 @@ Template.App_body.getTotalNotesAllowed = ->
     referrals = Meteor.user().referralCount || 0
     Meteor.settings.public.noteLimit + (Meteor.settings.public.referralNoteBonus * referrals)
 
-Template.App_body.loadFavorite = (number) ->
-  if Template.App_body.shouldNav() && $('.favoriteNote').get(number-1)
+Template.App_body.loadFavorite = (event, number) ->
+  if !event.metaKey && Template.App_body.shouldNav() && $('.favoriteNote').get(number-1)
+    $('#tagSearchPreview').hide()
     $('input').val('')
     NProgress.start()
     $(".mdl-layout__content").animate({ scrollTop: 0 }, 200)

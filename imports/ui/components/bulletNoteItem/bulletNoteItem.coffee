@@ -374,7 +374,7 @@ Template.bulletNoteItem.events
         top: headerOffset.top
         color: 'white'
         fontSize: '20px'
-      }, ->
+      }, 100, 'swing', ->
         $('.zoomingTitle').remove()
         FlowRouter.go '/note/'+instance.data._id+'/'+(FlowRouter.getParam('shareKey')||'')
       )
@@ -403,16 +403,17 @@ Template.bulletNoteItem.events
       Template.bulletNoteItem.upload file, instance
 
 Template.bulletNoteItem.toggleChildren = (instance) ->
+  console.log instance
   if Meteor.userId()
     Meteor.call 'notes.setShowChildren', {
-      noteId: instance.data._id
-      show: !instance.data.showChildren
+      noteId: instance.data.note._id
+      show: !instance.data.note.showChildren
       shareKey: FlowRouter.getParam('shareKey')
     }
 
-  if !Session.get('expand_'+instance.data._id)
+  if !Session.get('expand_'+instance.data.note._id)
     $(instance.firstNode).find('.childWrap').first().hide()
-    Session.set('expand_'+instance.data._id, true)
+    Session.set('expand_'+instance.data.note._id, true)
     # Hacky fun to let Meteor render the child notes first
     setTimeout ->
       $(instance.firstNode).find('ol').first().hide()
@@ -421,7 +422,7 @@ Template.bulletNoteItem.toggleChildren = (instance) ->
     , 1
   else
     $(instance.firstNode).find('ol').first().slideUp ->
-      Session.set('expand_'+instance.data._id, false)
+      Session.set('expand_'+instance.data.note._id, false)
 
 Template.bulletNoteItem.focus = (noteItem) ->
   view = Blaze.getView(noteItem)
