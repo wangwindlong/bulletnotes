@@ -406,8 +406,8 @@ Template.bulletNoteItem.toggleChildren = (instance) ->
   console.log instance
   if Meteor.userId()
     Meteor.call 'notes.setShowChildren', {
-      noteId: instance.data.note._id
-      show: !instance.data.note.showChildren
+      noteId: instance.data._id
+      show: !instance.data.showChildren
       shareKey: FlowRouter.getParam('shareKey')
     }
 
