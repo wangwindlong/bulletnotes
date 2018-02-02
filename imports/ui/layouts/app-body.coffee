@@ -346,18 +346,24 @@ Template.App_body.showingNotes = ->
       true
 
 Template.App_body.events
+  'blur .search': (event, instance) ->
+    $(event.currentTarget).val('')
+
   'keyup .search': (event, instance) ->
+    console.log event
+    if event.keyCode == 27
+      $(event.currentTarget).val('')
+      $(event.currentTarget).blur()
+
     # Throttle so we don't search for single letters
     clearTimeout(Template.App_body.timer)
+
     Template.App_body.timer = setTimeout ->
       if $(event.target).val()
         FlowRouter.go '/search/' + $(event.target).val()
       else
         FlowRouter.go '/'
     , 500
-    if event.keyCode == 27
-      $(event.currentTarget).blur()
-    true
 
   'click #scrollToTop': () ->
     $(".mdl-layout__content").animate({ scrollTop: 0 }, 200)
