@@ -276,7 +276,7 @@ export updateTitle = new ValidatedMethod
   run: ({ noteId, title, shareKey = null, createTransaction = true, lat = null, lon = null }) ->
     note = Notes.findOne noteId
 
-    if !Notes.isEditable noteId, shareKey
+    if !Meteor.isServer && !Notes.isEditable noteId, shareKey
       throw new (Meteor.Error)('not-authorized')
 
     if createTransaction

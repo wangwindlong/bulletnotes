@@ -111,7 +111,7 @@ if Meteor.isServer
       # Use either the document, or a video if available
       docs = data.document || data.video || data.photo
       console.log "Docs: ", docs
-      if isArray docs
+      if Array.isArray docs
         doc = docs[docs.length-1]
         doc.file_path = docs[0].file_path
       else

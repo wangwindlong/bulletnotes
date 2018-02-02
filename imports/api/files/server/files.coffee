@@ -117,6 +117,7 @@ if useS3 or useDropBox
 
 Files.denyClient()
 Files.on 'afterUpload', (fileRef) ->
+  console.log "Files on after upload!!!!"
   that = this
   
   Meteor.users.update fileRef.userId,
@@ -223,13 +224,19 @@ Files.on 'afterUpload', (fileRef) ->
                   # after successful upload to AWS:S3
                   that.unlink that.collection.findOne(fileRef._id), version
 
+  if fileRef.type == "image/jpeg"
+    fileRef.extension = "jpg"
+    fileRef.name = fileRef.name + ".jpg"
+
   if /png|jpe?g/i.test(fileRef.extension or '')
+    console.log "Make thumbnails"
     createThumbnails this, fileRef, (error, fileRef) ->
       if error
         console.error error
       if useDropBox or useS3
         sendToStorage that.collection.findOne(fileRef._id)
   else
+    console.log "Do not make thumbs"
     if useDropBox or useS3
       sendToStorage fileRef
 

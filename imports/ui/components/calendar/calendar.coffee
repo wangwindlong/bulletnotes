@@ -12,6 +12,9 @@ Template.calendar.onCreated ->
 Template.calendar.onRendered ->
   NProgress.done()
 
+  Tracker.autorun ->
+    Template.calendar.renderEvents()
+
   this.calendar = $('#calendar').fullCalendar
     header:
       left: 'prev,next today'
@@ -39,31 +42,7 @@ Template.calendar.onRendered ->
       $('#calendar').fullCalendar 'renderEvent', copiedEventObject, true
 
     viewRender: (view, element) ->
-      if FlowRouter.getParam('noteId')
-        notes = Notes.find { parent: FlowRouter.getParam('noteId'), date: {$exists: true} }
-      else
-        notes = Notes.find { date: {$exists: true} }
-    
-      $('#calendar').fullCalendar 'removeEvents'
-      $('.imageWrap').remove()
-      
-      notes.forEach (row) ->
-        Meteor.subscribe 'files.note', row._id
-        file = Files.findOne { noteId: row._id }
-
-        event = {
-          id: row._id
-          title: row.title.substr(0,50)
-          start: row.date
-          url: '/note/'+row._id
-          allDay: true
-          borderColor: ""
-        }
-        $('#calendar').fullCalendar 'renderEvent', event, true
-
-        if file
-          date = moment.utc(row.date).format('YYYY-MM-DD')
-          $('.fc-day[data-date="'+date+'"]').append('<div class="imageWrap"><img src="'+file.link('preview') + '" /></div>')
+      Template.calendar.renderEvents()
 
   that = this
   $('#external-events .external-event').each ->
@@ -82,6 +61,34 @@ Template.calendar.onRendered ->
   setTimeout () ->
     $('.fc-today-button').click()
   , 500
+
+Template.calendar.renderEvents = () ->
+  if FlowRouter.getParam('noteId')
+    notes = Notes.find { parent: FlowRouter.getParam('noteId'), date: {$exists: true} }
+  else
+    notes = Notes.find { date: {$exists: true} }
+
+  $('#calendar').fullCalendar 'removeEvents'
+  $('.imageWrap').remove()
+  
+  notes.forEach (row) ->
+    Meteor.subscribe 'files.note', row._id
+    file = Files.findOne { noteId: row._id }
+
+    event = {
+      id: row._id
+      title: row.title.substr(0,50)
+      start: row.date
+      url: '/note/'+row._id
+      allDay: true
+      borderColor: ""
+    }
+    $('#calendar').fullCalendar 'renderEvent', event, true
+
+    if file
+      date = moment.utc(row.date).format('YYYY-MM-DD')
+      $('.fc-day[data-date="'+date+'"]').append('<div class="imageWrap"><img src="'+file.link('preview') + '" /></div>')
+
 
 Template.calendar.helpers
   calendarTitle: ->

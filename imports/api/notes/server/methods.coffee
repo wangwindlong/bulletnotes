@@ -153,6 +153,11 @@ export inbox = new ValidatedMethod
         rank: 0
         complete: false
 
+      Meteor.call 'notes.updateTitle',
+        noteId: noteId
+        title: title
+        createTransaction: false
+
       Meteor.users.update userId,
         {$inc:{"notesCreated":1}}
 
