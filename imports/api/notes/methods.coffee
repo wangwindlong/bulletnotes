@@ -291,7 +291,7 @@ export updateTitle = new ValidatedMethod
     if match
       date = match[0]
       Notes.update noteId, {$set: {
-        date: moment(date).format()
+        calDate: moment(date).format()
       },$inc: {
         updateCount: 1
       }}

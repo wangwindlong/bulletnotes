@@ -63,32 +63,46 @@ Template.calendar.onRendered ->
   , 500
 
 Template.calendar.renderEvents = () ->
-  if FlowRouter.getParam('noteId')
-    notes = Notes.find { parent: FlowRouter.getParam('noteId'), date: {$exists: true} }
-  else
-    notes = Notes.find { date: {$exists: true} }
+  today = $('#calendar').fullCalendar('getDate')
+  console.log today
+  if (typeof today.toDate == 'function') 
+    date = today.toDate()
+    firstDay = new Date(date.getUTCFullYear(), date.getUTCMonth(), 1)
+    lastDay = new Date(date.getUTCFullYear(), date.getUTCMonth() + 1, 0)
 
-  $('#calendar').fullCalendar 'removeEvents'
-  $('.imageWrap').remove()
-  
-  notes.forEach (row) ->
-    Meteor.subscribe 'files.note', row._id
-    file = Files.findOne { noteId: row._id }
+    if FlowRouter.getParam('noteId')
+      notes = Notes.find { parent: FlowRouter.getParam('noteId'), date: {$exists: true} }
+    else
+      console.log firstDay, lastDay
+      # notes = Notes.find { calDate: {$exists: true} }
+      notes = Notes.find { date: { $gte: firstDay, $lt: lastDay } }
+      console.log notes
 
-    event = {
-      id: row._id
-      title: row.title.substr(0,50)
-      start: row.date
-      url: '/note/'+row._id
-      allDay: true
-      borderColor: ""
-    }
-    $('#calendar').fullCalendar 'renderEvent', event, true
+    $('#calendar').fullCalendar 'removeEvents'
+    $('.imageWrap').remove()
+    
+    notes.forEach (row) ->
+      Meteor.subscribe 'files.note', row._id, {
+        onReady: () ->
+          console.log "Got the files!"
+          file = Files.findOne { noteId: row._id }
 
-    if file
-      date = moment.utc(row.date).format('YYYY-MM-DD')
-      $('.fc-day[data-date="'+date+'"]').append('<div class="imageWrap"><img src="'+file.link('preview') + '" /></div>')
+          if file
+            console.log "Got file"
+            date = moment.utc(row.date).format('YYYY-MM-DD')
+            $('.fc-day[data-date="'+date+'"]').append('<div class="imageWrap"><img src="'+file.link('preview') + '" /></div>')
 
+      }
+      
+      event = {
+        id: row._id
+        title: row.title.substr(0,50)
+        start: row.date
+        url: '/note/'+row._id
+        allDay: true
+        borderColor: ""
+      }
+      $('#calendar').fullCalendar 'renderEvent', event, true
 
 Template.calendar.helpers
   calendarTitle: ->

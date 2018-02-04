@@ -1,5 +1,4 @@
 template(name='App_body')
-  +connectionBanner
   +HammerTouchArea(gestureMap=templateGestures)
     #container(class='{{wrapClasses}}')
       .mdl-layout.mdl-js-layout
@@ -63,6 +62,15 @@ template(name='App_body')
                   | Scroll To Top
               else
                 +App_loading
+      +unless connected
+        .notifications
+          .notification
+            span.glyphicon.glyphicon-refresh.glyphicon-spin
+            .meta
+              .title-notification
+                | {{_ 'layouts.appBody.tryingToConnect'}}
+              .description
+                | {{_ 'layouts.appBody.connectionIssue'}}
       if dev
         .notifications.devWarning
           .notification

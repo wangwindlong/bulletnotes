@@ -146,7 +146,6 @@ mrt:jquery-ui@1.9.2
 mrt:nprogress@0.2.0
 msavin:jetsetter@2.0.0
 msavin:mongol@2.0.1
-natestrauser:connection-banner@0.5.2
 natestrauser:publish-performant-counts@0.1.2
 nickbusey:bulletnotes-extra@0.0.1
 npm-bcrypt@0.9.3

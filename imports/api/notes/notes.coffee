@@ -161,6 +161,10 @@ Notes.schema = new SimpleSchema
     type: Date
     optional: yes
     index: 1
+  calDate:
+    type: Date
+    optional: yes
+    index: 1
   showChildren:
     type: Boolean
     optional: yes
