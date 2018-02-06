@@ -403,7 +403,6 @@ Template.bulletNoteItem.events
       Template.bulletNoteItem.upload file, instance
 
 Template.bulletNoteItem.toggleChildren = (instance) ->
-  console.log instance
   if Meteor.userId()
     Meteor.call 'notes.setShowChildren', {
       noteId: instance.data._id
@@ -411,9 +410,10 @@ Template.bulletNoteItem.toggleChildren = (instance) ->
       shareKey: FlowRouter.getParam('shareKey')
     }
 
-  if !Session.get('expand_'+instance.data.note._id)
+  # If we haven't set session to show it to expand, expand it now.
+  if !Session.get('expand_'+instance.data._id)
     $(instance.firstNode).find('.childWrap').first().hide()
-    Session.set('expand_'+instance.data.note._id, true)
+    Session.set('expand_'+instance.data._id, true)
     # Hacky fun to let Meteor render the child notes first
     setTimeout ->
       $(instance.firstNode).find('ol').first().hide()
@@ -422,7 +422,7 @@ Template.bulletNoteItem.toggleChildren = (instance) ->
     , 1
   else
     $(instance.firstNode).find('ol').first().slideUp ->
-      Session.set('expand_'+instance.data.note._id, false)
+      Session.set('expand_'+instance.data._id, false)
 
 Template.bulletNoteItem.focus = (noteItem) ->
   view = Blaze.getView(noteItem)
