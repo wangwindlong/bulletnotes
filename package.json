@@ -4,7 +4,7 @@
   "releaseDate": "2018-01-22",
   "private": true,
   "scripts": {
-    "start": "METEOR_PACKAGE_DIRS=$HOME/Code ROLLBAR_SERVER_ACCESS_TOKEN=d71133c85f83465db6d1c53f347a479a ROLLBAR_CLIENT_ACCESS_TOKEN=9787fb0d1c82430f8d3139a4cf3ae742 ROLLBAR_ENVIRONMENT=local meteor -p 3000 -s settings.private.json --mobile-server=http://192.168.1.124:3000",
+    "start": "METEOR_PACKAGE_DIRS=$HOME/Code meteor -p 3000 -s settings.private.json --mobile-server=http://192.168.1.124:3000",
     "bunvis": "meteor --extra-packages bundle-visualizer --production -p 3000 -s settings.private.json",
     "pretest": "coffeelint imports/; meteor reset",
     "test": "meteor test --once --driver-package dispatch:mocha-phantomjs --port 3333 --settings settings.json",
