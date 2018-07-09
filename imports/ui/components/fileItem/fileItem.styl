@@ -1,19 +1,16 @@
 .filesContainer
-  overflow: visible
+  overflow: hidden
   margin-left: 5em
   z-index: 999
 
-  .fileItem
+  .thumbnail
     float: left
     margin: 1em 1em
-    overflow: hidden
-    text-overflow: ellipsis;
-
-  .thumbnail
-    margin: 0
     padding: 1em
     max-width: 150px
     position: relative
+    overflow: hidden
+    text-overflow: ellipsis;
 
     .delete
       position: absolute
@@ -36,6 +33,7 @@
   background-color: rgb(192, 192, 192)
 
 .fileModal
-  width: 90%
-  img
-    width: 100%
+  .modal-dialog
+    width: 90%
+    img
+      width: 100%

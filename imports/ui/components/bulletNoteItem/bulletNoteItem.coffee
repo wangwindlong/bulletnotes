@@ -371,7 +371,7 @@ Template.bulletNoteItem.events
         top: headerOffset.top
         color: 'white'
         fontSize: '20px'
-      }, ->
+      }, 100, 'swing', ->
         $('.zoomingTitle').remove()
         FlowRouter.go '/note/'+instance.data._id+'/'+(FlowRouter.getParam('shareKey')||'')
       )
@@ -406,6 +406,7 @@ Template.bulletNoteItem.toggleChildren = (instance) ->
       shareKey: FlowRouter.getParam('shareKey')
     }
 
+  # If we haven't set session to show it to expand, expand it now.
   if !Session.get('expand_'+instance.data._id)
     $(instance.firstNode).find('.childWrap').first().hide()
     Session.set('expand_'+instance.data._id, true)
@@ -507,9 +508,9 @@ Template.bulletNoteItem.upload = (file, template) ->
         Meteor.call 'files.setNote',
             noteId: template.data._id
             fileId: fileObj._id
-          setShowContent.call
-            noteId: template.data._id
-            showContent: true
+        setShowContent.call
+          noteId: template.data._id
+          showContent: true
 
       template.currentUpload.set false
 

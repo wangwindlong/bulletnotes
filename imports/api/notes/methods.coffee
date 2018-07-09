@@ -276,7 +276,7 @@ export updateTitle = new ValidatedMethod
   run: ({ noteId, title, shareKey = null, createTransaction = true, lat = null, lon = null }) ->
     note = Notes.findOne noteId
 
-    if !Notes.isEditable noteId, shareKey
+    if !Meteor.isServer && !Notes.isEditable noteId, shareKey
       throw new (Meteor.Error)('not-authorized')
 
     if createTransaction
@@ -291,7 +291,7 @@ export updateTitle = new ValidatedMethod
     if match
       date = match[0]
       Notes.update noteId, {$set: {
-        date: moment(date).format()
+        calDate: moment(date).format()
       },$inc: {
         updateCount: 1
       }}
@@ -384,9 +384,8 @@ export makeChild = new ValidatedMethod
     if parent
       Meteor.call 'notes.denormalizeChildCount',
         noteId: parent._id
-
-    Meteor.call 'notes.denormalizeRanks',
-      noteId: parentId
+      Meteor.call 'notes.denormalizeRanks',
+        noteId: parent._id
 
 
 removeRun = (note) ->

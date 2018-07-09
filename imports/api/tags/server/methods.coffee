@@ -14,7 +14,7 @@ export updateNoteTags = new ValidatedMethod
     clean: yes
     filter: no
   run: ({ noteId }) ->
-    if !Meteor.user()
+    if !Meteor.user() && !Meteor.isServer
       throw new (Meteor.Error)('not-authorized')
 
     Meteor.defer ->

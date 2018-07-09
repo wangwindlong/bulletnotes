@@ -83,15 +83,18 @@ Meteor.startup ->
   NProgress.start()
   # Only show the connection error box if it has been 5 seconds since
   # the app started
-  $(document).on 'keydown', (e) ->
+  $(document).on 'keyup', (event) ->
     editingNote = $(document.activeElement).hasClass('title')
     menuVisible = $('#container').hasClass('menu-open')
-    switch e.keyCode
+    switch event.keyCode
       # f - find / search
       when 70
         if Template.App_body.shouldNav()
+          event.preventDefault()
           $('.searchIcon').addClass('is-focused')
           $('.search').focus()
+          $(".mdl-layout__content").animate({ scrollTop: 0 }, 100)
+
       # ` Back Tick - toggle menu
       when 192
         if Template.App_body.shouldNav()
@@ -114,31 +117,31 @@ Meteor.startup ->
           FlowRouter.go('/')
       # 1
       when 49
-        Template.App_body.loadFavorite 1
+        Template.App_body.loadFavorite event, 1
       # 2
       when 50
-        Template.App_body.loadFavorite 2
+        Template.App_body.loadFavorite event, 2
       # 3
       when 51
-        Template.App_body.loadFavorite 3
+        Template.App_body.loadFavorite event, 3
       # 4
       when 52
-        Template.App_body.loadFavorite 4
+        Template.App_body.loadFavorite event, 4
       # 5
       when 53
-        Template.App_body.loadFavorite 5
+        Template.App_body.loadFavorite event, 5
       # 6
       when 54
-        Template.App_body.loadFavorite 6
+        Template.App_body.loadFavorite event, 6
       # 7
       when 55
-        Template.App_body.loadFavorite 7
+        Template.App_body.loadFavorite event, 7
       # 8
       when 56
-        Template.App_body.loadFavorite 8
+        Template.App_body.loadFavorite event, 8
       # 9
       when 57
-        Template.App_body.loadFavorite 9
+        Template.App_body.loadFavorite event, 9
 
   setTimeout (->
     # FIXME:
@@ -209,8 +212,9 @@ Template.App_body.getTotalNotesAllowed = ->
     referrals = Meteor.user().referralCount || 0
     Meteor.settings.public.noteLimit + (Meteor.settings.public.referralNoteBonus * referrals)
 
-Template.App_body.loadFavorite = (number) ->
-  if Template.App_body.shouldNav() && $('.favoriteNote').get(number-1)
+Template.App_body.loadFavorite = (event, number) ->
+  if !event.metaKey && Template.App_body.shouldNav() && $('.favoriteNote').get(number-1)
+    $('#tagSearchPreview').hide()
     $('input').val('')
     NProgress.start()
     $(".mdl-layout__content").animate({ scrollTop: 0 }, 200)
@@ -338,18 +342,24 @@ Template.App_body.showingNotes = ->
       true
 
 Template.App_body.events
+  'blur .search': (event, instance) ->
+    $(event.currentTarget).val('')
+
   'keyup .search': (event, instance) ->
+    console.log event
+    if event.keyCode == 27
+      $(event.currentTarget).val('')
+      $(event.currentTarget).blur()
+
     # Throttle so we don't search for single letters
     clearTimeout(Template.App_body.timer)
+
     Template.App_body.timer = setTimeout ->
       if $(event.target).val()
         FlowRouter.go '/search/' + $(event.target).val()
       else
         FlowRouter.go '/'
     , 500
-    if event.keyCode == 27
-      $(event.currentTarget).blur()
-    true
 
   'click #scrollToTop': () ->
     $(".mdl-layout__content").animate({ scrollTop: 0 }, 200)

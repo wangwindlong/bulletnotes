@@ -42,6 +42,7 @@ TelegramBot.stop = () => {
 }
 
 TelegramBot.parsePollResult = data => {
+	console.log(data);
 	data.map(item => {
 		TelegramBot.getUpdatesOffset = item.update_id;
 
@@ -66,7 +67,8 @@ TelegramBot.parsePollResult = data => {
 					obj.callback(fromUsername, message.text, chatId);
 				}
 			}
-			
+			console.log("Type: ",type);
+
 			if (!isConversation) {
 				if (type === 'text' && typeof(TelegramBot.triggers.text) !== 'undefined') {
 					const msg = TelegramBot.parseCommandString(item.message.text);

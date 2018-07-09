@@ -104,14 +104,14 @@ Template.fileItem.helpers
     Template.instance().showModal.get()
 
 Template.fileItem.events
-
   'click [data-show-info]': (e, template) ->
     e.preventDefault()
     template.showInfo.set !template.showInfo.get()
     false
+
   'touchmove .file-overlay': (e) ->
     e.preventDefault()
-    false
+
   'touchmove .file': (e, template) ->
     if template.$(e.currentTarget).height() < template.$('.file-table').height()
       template.$('a.show-info').hide()
@@ -125,14 +125,15 @@ Template.fileItem.events
         template.$('a.download-file').show()
         return
       ), 768)
-  "click .fileImage": (event, template) ->
+
+  'click .fileImage': (event, template) ->
     template.showModal.set true
     setTimeout ->
       template.$('.modalTrigger').trigger('click')
       $('#__blaze-root').append($(event.currentTarget).siblings('.modal'))
     , 20
 
-  "click .delete": (event, template) ->
+  'click .delete': (event, template) ->
     event.preventDefault()
     event.stopPropagation()
     if confirm "Are you sure you want to delete this file?"

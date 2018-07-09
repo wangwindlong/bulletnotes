@@ -135,9 +135,10 @@ Template.menu.helpers
   
   avatar: ->
     if Meteor.user().emails
-      Gravatar.imageUrl(Meteor.user().emails[0].address)
+      Gravatar.imageUrl Meteor.user().emails[0].address,
+        secure: true
     else if Meteor.user()
-      Avatar.getUrl(Meteor.user())
+      Avatar.getUrl Meteor.user()
 
 Template.menu.events
   'click .menuToggle': (event, instance) ->

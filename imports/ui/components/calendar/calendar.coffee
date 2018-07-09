@@ -12,6 +12,9 @@ Template.calendar.onCreated ->
 Template.calendar.onRendered ->
   NProgress.done()
 
+  Tracker.autorun ->
+    Template.calendar.renderEvents()
+
   this.calendar = $('#calendar').fullCalendar
     header:
       left: 'prev,next today'
@@ -38,35 +41,59 @@ Template.calendar.onRendered ->
       # (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
       $('#calendar').fullCalendar 'renderEvent', copiedEventObject, true
 
-  that = this
-  Tracker.autorun ->
-    events = []
+    viewRender: (view, element) ->
+      Template.calendar.renderEvents()
 
-    $('#external-events .external-event').each ->
-      # create an Event Object
-      # (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-      # it doesn't need to have a start or end
-      eventObject = title: $.trim($(this).text())
-      # store the Event Object in the DOM element so we can get to it later
-      $(this).data 'eventObject', eventObject
-      # make the event draggable using jQuery UI
-      $(this).draggable
-        zIndex: 999
-        revert: true
-        revertDuration: 0
+  that = this
+  $('#external-events .external-event').each ->
+    # create an Event Object
+    # (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+    # it doesn't need to have a start or end
+    eventObject = title: $.trim($(this).text())
+    # store the Event Object in the DOM element so we can get to it later
+    $(this).data 'eventObject', eventObject
+    # make the event draggable using jQuery UI
+    $(this).draggable
+      zIndex: 999
+      revert: true
+      revertDuration: 0
+
+  setTimeout () ->
+    $('.fc-today-button').click()
+  , 500
+
+Template.calendar.renderEvents = () ->
+  today = $('#calendar').fullCalendar('getDate')
+  console.log today
+  if (typeof today.toDate == 'function') 
+    date = today.toDate()
+    firstDay = new Date(date.getUTCFullYear(), date.getUTCMonth(), 1)
+    lastDay = new Date(date.getUTCFullYear(), date.getUTCMonth() + 1, 0)
 
     if FlowRouter.getParam('noteId')
       notes = Notes.find { parent: FlowRouter.getParam('noteId'), date: {$exists: true} }
     else
-      notes = Notes.find { date: {$exists: true} }
+      console.log firstDay, lastDay
+      # notes = Notes.find { calDate: {$exists: true} }
+      notes = Notes.find { date: { $gte: firstDay, $lt: lastDay } }
+      console.log notes
 
     $('#calendar').fullCalendar 'removeEvents'
     $('.imageWrap').remove()
-
+    
     notes.forEach (row) ->
-      Meteor.subscribe 'files.note', row._id
-      file = Files.findOne { noteId: row._id }
+      Meteor.subscribe 'files.note', row._id, {
+        onReady: () ->
+          console.log "Got the files!"
+          file = Files.findOne { noteId: row._id }
 
+          if file
+            console.log "Got file"
+            date = moment.utc(row.date).format('YYYY-MM-DD')
+            $('.fc-day[data-date="'+date+'"]').append('<div class="imageWrap"><img src="'+file.link('preview') + '" /></div>')
+
+      }
+      
       event = {
         id: row._id
         title: row.title.substr(0,50)
@@ -76,14 +103,6 @@ Template.calendar.onRendered ->
         borderColor: ""
       }
       $('#calendar').fullCalendar 'renderEvent', event, true
-      events.push event
-      if file
-        date = moment.utc(row.date).format('YYYY-MM-DD')
-        $('.fc-day[data-date="'+date+'"]').append('<div class="imageWrap"><img src="'+file.link('preview') + '" /></div>')
-
-    setTimeout () ->
-      $('.fc-today-button').click()
-    , 500
 
 Template.calendar.helpers
   calendarTitle: ->
