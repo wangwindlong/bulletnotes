@@ -10,7 +10,6 @@ Picker.route '/bot/chat', ( params, request, response, next ) ->
       apiKey: request.body.apiKey
     , (err, res) ->
       if err
-        console.log "Error ", err
         response.statusCode = 301
       else
         response.statusCode = 200

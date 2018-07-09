@@ -38,14 +38,12 @@ Template.kanbanList.helpers
     data = {
       note: note
     }
-    console.log data
     return data
 
   kanbanListBodyArgs: (note) ->
     data = {
       note: note
     }
-    console.log data
     return data
 
   fileArgs: (file) ->

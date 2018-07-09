@@ -194,10 +194,6 @@ Template.App_body.onCreated ->
       else
         $('body').removeAttr('class').addClass 'Mountain'
 
-  setTimeout (->
-    $('.betaWarning,.devWarning').fadeOut()
-  ), 5000
-
 Template.App_body.getUploadBitsAllowed = ->
   if Meteor.user().isPro
     Meteor.settings.public.maxProUploadBits

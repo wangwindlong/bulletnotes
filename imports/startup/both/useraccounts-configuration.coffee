@@ -20,7 +20,6 @@ mySubmitFunc = (error, state) ->
           'rank': 1
           'showChildren': true
         , (err, res) ->
-          console.log err, res
           insert.call
             'title': 'You can nest notes under each other'
             'rank': 10

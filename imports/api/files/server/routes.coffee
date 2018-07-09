@@ -5,7 +5,6 @@ Picker.middleware( bodyParser.json() )
 Picker.middleware( bodyParser.urlencoded( { extended: false } ) )
 
 Picker.route '/file/download/:fileId', ( params, request, response, next ) ->
-  console.log params['fileId']
   if params['fileId']
     file = Files.findOne params['fileId']
     response.setHeader( 'Content-Type', 'application/octet-stream' )

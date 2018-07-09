@@ -80,11 +80,6 @@ Template.bulletNotes.onRendered ->
     $('.noteContainer').droppable
       drop: (event, ui ) ->
         event.stopImmediatePropagation()
-        console.log "Drop! "
-        console.log event
-        console.log ui
-        console.log ui.draggable.context.dataset.id
-        console.log $(event.target).parent(), $(event.target).parent().data('id')
         Meteor.call 'files.setNote',
           fileId: ui.draggable.context.dataset.id
           noteId: $(event.target).parent().data('id')
@@ -180,10 +175,6 @@ Template.bulletNotes.events
     input.attr("type", "file")
     input.trigger('click')
     input.change (submitEvent) ->
-      console.log "Upload file"
-      # console.log submitEvent.originalEvent.dataTransfer.files[0]
-      console.log instance
-      console.log submitEvent
       file = submitEvent.currentTarget.files[0]
       name = file.name
       Template.bulletNoteItem.encodeImageFileAsURL (res) ->
@@ -192,7 +183,6 @@ Template.bulletNotes.events
           data: res
           name: name
         }, (err, res) ->
-          console.log err, res
           $(event.currentTarget).closest('.noteContainer').removeClass 'dragging'
       , file
 
@@ -221,7 +211,6 @@ Template.bulletNotes.events
 
   'change .note-edit': (event, instance) ->
     target = event.target
-    console.log event, instance
     if $(target).val() == 'edit'
       instance.editNote()
     else if $(target).val() == 'delete'
@@ -237,7 +226,6 @@ Template.bulletNotes.events
   'blur .title-wrapper': (event, instance) ->
     event.stopPropagation()
     title = Template.bulletNoteItem.stripTags(event.target.innerHTML)
-    console.log "Got title 191", title
     if title != @title
       Meteor.call 'notes.updateTitle', {
         noteId: instance.data.note()._id
@@ -306,7 +294,6 @@ Template.bulletNotes.rendered = ->
       $('.sortable').removeClass 'sorting'
 
     sort: (event, ui) ->
-      console.log event, ui
       Session.set 'dragging', true
       $('.sortable').addClass 'sorting'
 

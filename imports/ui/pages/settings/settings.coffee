@@ -33,11 +33,9 @@ Template.App_settings.events
       message: "API Copied to Clipboard"
 
   'click #dropboxExportLink': (event) ->
-    Meteor.call 'notes.dropboxExport', {}, (err, res) ->
-      console.log err, res
+    Meteor.call 'notes.dropboxExport', {}
 
   'click #themes .themeSelect': (event, instance) ->
-    console.log event
     Meteor.call 'users.setTheme', {theme:event.target.dataset.name}, (err, res) ->
       Template.App_body.showSnackbar
         message: "Theme Saved"

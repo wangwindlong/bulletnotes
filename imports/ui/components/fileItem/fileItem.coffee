@@ -28,7 +28,6 @@ Template.fileItem.onRendered ->
   @fetchedText.set false
 
   that = this
-  console.log this
   if @data.file.isText or @data.file.isJSON
     if @data.file.size < 1024 * 64
       HTTP.call 'GET', @data.file.link(), (error, resp) ->
@@ -51,7 +50,6 @@ Template.fileItem.onRendered ->
   else if @data.file.isImage
     img = new Image
     if /png|jpe?g/i.test(@data.file.type)
-      console.log "Got image! ",@data.file
       handle = undefined
 
       img.onload = ->

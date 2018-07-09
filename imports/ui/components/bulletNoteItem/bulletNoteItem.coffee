@@ -74,8 +74,6 @@ Template.bulletNoteItem.helpers
     @rank / 2
 
   files: () ->
-    console.log "Get files for :",@_id
-    console.log Files.find({noteId:@_id}, {
       sort: {
         'meta.created_at': -1
       }
@@ -249,7 +247,6 @@ Template.bulletNoteItem.events
 
   'click .showContent': (event, instance) ->
     event.stopImmediatePropagation()
-    console.log instance
     setShowContent.call
       noteId: instance.data._id
       showContent: true
@@ -385,15 +382,14 @@ Template.bulletNoteItem.events
   'dragleave .title, dragleave .filesContainer': (event, instance) ->
     $(event.currentTarget).closest('.noteContainer').removeClass 'dragging'
 
-  'drop .noteContainer': (event, instance) ->
-    event.preventDefault()
-    event.stopPropagation()
-    console.log event, instance
-    if event.toElement
-      console.log "Move file!"
-    else if event.originalEvent.dataTransfer
-      for file in event.originalEvent.dataTransfer.files
-        Template.bulletNoteItem.upload file, instance
+  # 'drop .noteContainer': (event, instance) ->
+  #   event.preventDefault()
+  #   event.stopPropagation()
+  #   if event.toElement
+  #     console.log "Move file!"
+  #   else if event.originalEvent.dataTransfer
+  #     for file in event.originalEvent.dataTransfer.files
+  #       Template.bulletNoteItem.upload file, instance
 
   'change .fileInput': (event, instance) ->
     event.preventDefault()

@@ -372,7 +372,6 @@ export makeChild = new ValidatedMethod
         showChildren: true
         childrenLastShown: new Date
       }, {tx: true }
-    console.log "Rank: ", rank
     Notes.update noteId, {$set:
       rank: rank
       parent: parentId

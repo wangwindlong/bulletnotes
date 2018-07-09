@@ -7,9 +7,6 @@ require './noteDetailCard.jade'
 Template.noteDetailCard.helpers
 	transactions: ->
 		instance = Template.instance()
-		console.log NoteLogs.find {
-			"context.noteId": instance.data._id
-		}
 		NoteLogs.find {
 			"context.noteId": instance.data._id
 		}

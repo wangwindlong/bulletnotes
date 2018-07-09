@@ -67,9 +67,7 @@ Template.encrypt.events
         notes = Notes.find { parent: this._id }, sort: rank: 1
         badPass = false
         notes.forEach (note) ->
-            console.log note
             if badPass || !Template.encrypt.decryptNote note, password
-                console.log 'Setting bad pass true'
                 badPass = true
                 false
 
@@ -113,7 +111,6 @@ Template.encrypt.encryptNote = (note, password) ->
             true
 
 Template.encrypt.decryptNote = (note, password) ->
-    console.log "Try and decrypt: ", note
     try 
         crypt = CryptoJS.AES.decrypt(note.title, password)
         cryptBody = CryptoJS.AES.decrypt(note.body, password)
@@ -124,7 +121,6 @@ Template.encrypt.decryptNote = (note, password) ->
         
     decrypted = crypt.toString(CryptoJS.enc.Utf8)
     decryptedBody = cryptBody.toString(CryptoJS.enc.Utf8)
-    console.log "Got ", decrypted
     if !crypt || decrypted.length < 1
         Template.App_body.showSnackbar
           message: "Bad password"

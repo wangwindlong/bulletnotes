@@ -45,15 +45,15 @@ export updateNoteTags = new ValidatedMethod
           }}
 
 
-        tags = note.title.match Notes.hashtagPattern
-        if tags
-          tags.forEach (tag) ->
-            console.log "Save a link to tag: "+tag
+        # tags = note.title.match Notes.hashtagPattern
+        # if tags
+        #   tags.forEach (tag) ->
+        #     console.log "Save a link to tag: "+tag
 
-        tags = note.title.match Notes.namePattern
-        if tags
-          tags.forEach (tag) ->
-            console.log "Save a link to dude: "+tag
+        # tags = note.title.match Notes.namePattern
+        # if tags
+        #   tags.forEach (tag) ->
+        #     console.log "Save a link to dude: "+tag
 
 # Get note of all method names on Notes
 TAGS_METHODS = _.pluck([

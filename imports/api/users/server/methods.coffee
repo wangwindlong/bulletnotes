@@ -84,16 +84,12 @@ export checkSubscriptions = new ValidatedMethod
   run: ->
     Stripe = require('stripe')(Meteor.settings.stripeSecretKey)
     users = Meteor.users.find stripeSubscriptionId: {$exists: true}
-    console.log "Check subsriptions"
     users.forEach (user) ->
       stripeSubscriptionsRetrieveSync = Meteor.wrapAsync Stripe.subscriptions.retrieve, Stripe.subscriptions
       subscription = stripeSubscriptionsRetrieveSync user.stripeSubscriptionId
       if subscription.ended_at
         # Subscription is exired, cancel it
         Meteor.users.update {_id:user._id}, {$unset:{stripeSubscriptionId:1,isPro:1}}
-        console.log "Cancelled "+user._id
-      else
-        console.log "Valid "+user._id
 
 
 # Get note of all method names on Notes

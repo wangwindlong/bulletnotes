@@ -167,7 +167,6 @@ Files.on 'afterUpload', (fileRef) ->
     writeToDB = (fileRef, version, data, triesSend = 0) ->
       # DropBox already uses random URLs
       # No need to use random file names
-      console.log "Writing db", data
       client.writeFile fileRef._id + '-' + version + '.' + fileRef.extension, data, (error, stat) ->
         bound ->
           if error

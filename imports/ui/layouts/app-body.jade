@@ -80,15 +80,6 @@ template(name='App_body')
                 | {{_ 'layouts.appBody.devWarning'}}
               .description
                 | {{_ 'layouts.appBody.devWarningBody'}}
-      else
-        .notifications.betaWarning
-          .notification
-            span.glyphicon.glyphicon-warning-sign
-            .meta
-              .title-notification
-                | {{_ 'layouts.appBody.devWarning'}}
-              .description
-                | {{{_ 'layouts.appBody.betaWarningBody'}}}
   if showBotWidget
     #botWidgetWrap
       +botWidget

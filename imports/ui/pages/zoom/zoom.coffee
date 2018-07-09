@@ -37,15 +37,10 @@ Template.App_zoom.onRendered ->
   # Get JSON data
   notes = Notes.find parent: {$exists:false}
   notesJson = []
-  console.log "W?"
-  console.log notes
   notes.forEach (note) ->
-    console.log note
     notesJson.push
       "title": note.title
   treeData = {"title":"Home","children":notesJson}
-  # treeJSON = d3.json(, (error, treeData) ->
-  console.log treeData
   # Calculate total nodes, max label length
   totalNodes = 0
   maxLabelLength = 0

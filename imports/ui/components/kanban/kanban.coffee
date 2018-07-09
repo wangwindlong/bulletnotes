@@ -14,7 +14,6 @@ Template.kanban.onRendered ->
     connectWith: '.kanbanChildNotes'
     handle: '.dot'
     update: (event, ui) ->
-      console.log event, ui
       parent = $(event.target).closest('.kanbanList').data('id')
       upperSibling = $(ui.item[0]).prev('li').data('id')
       if upperSibling

@@ -14,7 +14,6 @@ import '/imports/ui/components/calendar/calendar.coffee'
 import '/imports/ui/components/map/map.coffee'
 
 Template.Notes_show_page.onCreated ->
-  console.log "Rendering notes show page"
   if !Meteor.user() && !Session.get 'introLoaded'
       FlowRouter.go '/intro'
 
@@ -41,7 +40,6 @@ Template.Notes_show_page.events
     event.stopPropagation()
     that = this
     Session.set 'focused', false
-    # console.log event.target
     body = Template.bulletNoteItem.stripTags event.target.innerHTML
     if body != Template.bulletNoteItem.stripTags(@body)
       note = Notes.findOne FlowRouter.getParam 'noteId',
