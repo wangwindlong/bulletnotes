@@ -14,9 +14,6 @@ import '/imports/ui/components/calendar/calendar.coffee'
 import '/imports/ui/components/map/map.coffee'
 
 Template.Notes_show_page.onCreated ->
-  if !Meteor.user() && !Session.get 'introLoaded'
-      FlowRouter.go '/intro'
-
   @getNoteId = ->
     FlowRouter.getParam 'noteId'
 
@@ -123,7 +120,10 @@ Template.Notes_show_page.helpers
     if noteId
       if Notes.findOne(noteId) then [ noteId ] else []
     else
-      [ 0 ]
+      if !Meteor.user() && !Session.get 'introLoaded'
+        FlowRouter.go '/intro'
+      else
+        [ 0 ]
 
   noteArgs: (noteId) ->
     instance = Template.instance()

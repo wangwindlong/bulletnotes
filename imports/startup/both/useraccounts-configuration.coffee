@@ -11,6 +11,9 @@ mySubmitFunc = (error, state) ->
       # Successfully logged in
     if state == 'signUp'
       user = Meteor.user()
+      setTimeout ->
+        FlowRouter.go '/'
+      , 250
       if user.notesCreated
         Template.App_body.showSnackbar
           message: 'Account found, welcome back!'
@@ -56,8 +59,6 @@ mySubmitFunc = (error, state) ->
 
         Template.App_body.showSnackbar
           message: 'Welcome to BulletNotes!'
-          
-      FlowRouter.go '/'
 
     if state == 'signOut'
       FlowRouter.go '/intro'
