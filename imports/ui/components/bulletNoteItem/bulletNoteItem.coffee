@@ -74,10 +74,6 @@ Template.bulletNoteItem.helpers
     @rank / 2
 
   files: () ->
-      sort: {
-        'meta.created_at': -1
-      }
-    }).count()
     Files.find({noteId:@_id}, {
       sort: {
         'meta.created_at': -1
