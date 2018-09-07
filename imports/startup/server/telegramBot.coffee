@@ -5,7 +5,7 @@ request = require('request')
 https = require('https')
 fs = require('fs')
 
-if Meteor.isServer
+if Meteor.isServer && Meteor.settings.telegramKey
   Meteor.startup ->
     TelegramBot.token = Meteor.settings.telegramKey
     TelegramBot.start()
