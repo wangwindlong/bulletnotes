@@ -6,8 +6,8 @@ import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 import { chai, assert } from 'meteor/practicalmeteor:chai';
 import { Random } from 'meteor/random';
 import { _ } from 'meteor/underscore';
-import { Notes } from '../notes.coffee';
-import './publications.coffee';
+import { Notes } from '../notes.js';
+import './publications.js';
 
 describe('notes', function () {
   describe('mutators', function () {

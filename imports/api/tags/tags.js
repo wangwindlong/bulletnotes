@@ -1,0 +1,1 @@
+export var Tags = new Mongo.Collection('tags');

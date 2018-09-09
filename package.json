@@ -4,7 +4,7 @@
   "releaseDate": "2018-01-22",
   "private": true,
   "scripts": {
-    "start": "METEOR_PACKAGE_DIRS=$HOME/Code meteor -p 3000 -s settings.private.json --mobile-server=http://192.168.1.124:3000",
+    "start": "METEOR_PACKAGE_DIRS=$HOME/Code meteor -p 3000 -s settings.private.json --mobile-server=http://192.168.1.126:3000",
     "bunvis": "meteor --extra-packages bundle-visualizer --production -p 3000 -s settings.private.json",
     "pretest": "coffeelint imports/; meteor reset",
     "test": "meteor test --once --driver-package dispatch:mocha-phantomjs --port 3333 --settings settings.json",
@@ -17,6 +17,7 @@
     "desktop": "meteor-desktop"
   },
   "dependencies": {
+    "@babel/runtime": "7.0.0-beta.55",
     "autoprefixer": "^6.4.1",
     "aws-sdk": "^2.167.0",
     "babel-runtime": "^6.18.0",

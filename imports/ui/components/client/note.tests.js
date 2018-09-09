@@ -9,7 +9,7 @@ import { Notes } from '/imports/api/notes/notes';
 
 
 import { withRenderedTemplate } from '/imports/ui/test-helpers.js';
-import '/imports/ui/components/note/note.coffee';
+import '/imports/ui/components/note/note.js';
 
 describe('Notes_item', function () {
   beforeEach(function () {
