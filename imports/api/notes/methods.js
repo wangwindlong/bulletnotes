@@ -12,7 +12,6 @@ import SimpleSchema from 'simpl-schema';
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 import { Random } from 'meteor/random';
 
-import rankDenormalizer from './rankDenormalizer.js';
 import childCountDenormalizer from './childCountDenormalizer.js';
 const sanitizeHtml = require('sanitize-html');
 
@@ -115,9 +114,6 @@ export var insert = new ValidatedMethod({
     } else {
       noteId = Notes.insert(note, {tx: true});
     }
-
-    Meteor.call('notes.denormalizeRanks',
-      {noteId: parentId});
 
     childCountDenormalizer.afterInsertNote(parentId);
 
@@ -533,8 +529,6 @@ export var makeChild = new ValidatedMethod({
     }
     if (parent) {
       Meteor.call('notes.denormalizeChildCount',
-        {noteId: parent._id});
-      return Meteor.call('notes.denormalizeRanks',
         {noteId: parent._id});
     }
   }

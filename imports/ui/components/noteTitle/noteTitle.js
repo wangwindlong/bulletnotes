@@ -3,6 +3,12 @@
  * DS102: Remove unnecessary code created because of implicit returns
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
+
+ /*
+
+This file is responsible for the interactions with a note's main "title" content
+
+ */
 require('./noteTitle.jade');
 
 import { Notes } from '/imports/api/notes/notes.js';
@@ -145,16 +151,25 @@ Template.noteTitle.events({
           } else if (event.ctrlKey) {
             return Template.bulletNoteItem.toggleChildren(instance);
           } else {
+            // Get the rank of the note below the current note, if any
+            let nextNote = $(event.currentTarget).parentsUntil('.note-item').closest('.note-item').next('.note-item').get(0)
+            let rank
+            if (nextNote) {
+              rank = (instance.data.note.rank + Blaze.getData(nextNote).rank) / 2
+            } else {
+              rank = instance.data.note.rank + 1 
+            }
             // Create a new note below the current.
             Meteor.call('notes.insert', {
               title: '',
-              rank: instance.data.note.rank + 0.5,
+              rank: rank,
               parent: instance.data.note.parent,
               shareKey: FlowRouter.getParam('shareKey')
             }, function(err, res) {
               if (err) {
-               return Template.App_body.showSnackbar({
-                 message: err.message});
+                return Template.App_body.showSnackbar({
+                  message: err.message
+                });
              }
             });
 

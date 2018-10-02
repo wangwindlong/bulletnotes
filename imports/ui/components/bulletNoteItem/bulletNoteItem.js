@@ -50,7 +50,7 @@ Template.bulletNoteItem.isValidImageUrl = (url, callback) =>
   )
 ;
 
-Template.bulletNoteItem.onCreated(function() {
+Template.bulletNoteItem.onCreated(function(count) {
   let handle;
   Meteor.subscribe('files.note', this.data._id);
   if (this.data.showChildren && this.data.children && !FlowRouter.getParam('searchParam')) {

@@ -372,24 +372,36 @@ Template.bulletNotes.rendered = function() {
       if (!parent) {
         parent = FlowRouter.getParam('noteId');
       }
-      const upperSibling = $(ui.item).closest('li').prev('li').data('id');
+      let upperSibling 
+      let lowerSibling
+
+      upperSibling = $(ui.item).closest('li').prev('li')[0] && Blaze.getData($(ui.item).closest('li').prev('li')[0])
+      lowerSibling = $(ui.item).closest('li').next('li')[0] && Blaze.getData($(ui.item).closest('li').next('li')[0])
+
       Session.set('dragging', false);
       $('.sortable').removeClass('sorting');
 
-      if (upperSibling) {
+      if (!upperSibling) {
         return makeChild.call({
           noteId: $(ui.item).closest('li').data('id'),
           shareKey: FlowRouter.getParam('shareKey'),
-          upperSibling,
+          rank: lowerSibling.rank - 1,
+          parent
+        });
+      } else if (!lowerSibling) {
+        return makeChild.call({
+          noteId: $(ui.item).closest('li').data('id'),
+          shareKey: FlowRouter.getParam('shareKey'),
+          rank: upperSibling.rank + 1,
           parent
         });
       } else {
         return makeChild.call({
           noteId: $(ui.item).closest('li').data('id'),
           shareKey: FlowRouter.getParam('shareKey'),
-          rank: 0,
+          rank: (upperSibling.rank + lowerSibling.rank) / 2,
           parent
-        });
+        }); 
       }
     }
   });
