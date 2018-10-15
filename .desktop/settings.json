@@ -1,7 +1,7 @@
 {
-    "name": "Bullet Notes",
+    "name": "My Meteor App",
     "version": "0.0.1",
-    "projectName": "BulletNotes",
+    "projectName": "MyMeteorApp",
     "devTools": true,
     "devtron": true,
     "desktopHCP": true,
@@ -13,7 +13,7 @@
     "webAppStartupTimeout": 60000,
     "exposeLocalFilesystem": false,
     "window": {
-        "icon": "@assets/bulletnotes.png",
+        "icon": "@assets/meteor.png",
         "_windows": {
             "icon": "@assets/meteor.ico"
         }

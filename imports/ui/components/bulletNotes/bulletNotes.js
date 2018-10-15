@@ -381,7 +381,14 @@ Template.bulletNotes.rendered = function() {
       Session.set('dragging', false);
       $('.sortable').removeClass('sorting');
 
-      if (!upperSibling) {
+      if (!upperSibling && !lowerSibling) {
+        return makeChild.call({
+          noteId: $(ui.item).closest('li').data('id'),
+          shareKey: FlowRouter.getParam('shareKey'),
+          rank: 1,
+          parent
+        });
+      } else if (!upperSibling) {
         return makeChild.call({
           noteId: $(ui.item).closest('li').data('id'),
           shareKey: FlowRouter.getParam('shareKey'),
