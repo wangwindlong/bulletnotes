@@ -367,7 +367,7 @@ Template.bulletNotes.rendered = function() {
       return $('.sortable').removeClass('sorting');
     },
 
-    update(event, ui) {
+    relocate(event, ui) {
       let parent = $(ui.item).closest('ol').closest('li').data('id');
       if (!parent) {
         parent = FlowRouter.getParam('noteId');
@@ -380,7 +380,6 @@ Template.bulletNotes.rendered = function() {
 
       Session.set('dragging', false);
       $('.sortable').removeClass('sorting');
-
       if (!upperSibling && !lowerSibling) {
         return makeChild.call({
           noteId: $(ui.item).closest('li').data('id'),

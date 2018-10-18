@@ -49,19 +49,18 @@ template(name='bulletNoteItem')
         | : 
         span#progress {{progress.get}}%
   
-    .childWrap
-      if childNotes
-        ol
-          each childNotes
-            +bulletNoteItem
-        if completedCount
-          .toggleComplete
-            if showComplete
-              if alwaysShowComplete
-                a.toggleAlwaysShowComplete Don't Always Show Complete
-              else
-                | Hide completed
-                a.toggleAlwaysShowComplete Always Show Complete
+    if childNotes
+      ol
+        each childNotes
+          +bulletNoteItem
+      if completedCount
+        .toggleComplete
+          if showComplete
+            if alwaysShowComplete
+              a.toggleAlwaysShowComplete Don't Always Show Complete
             else
-              | Show completed ({{completedCount}} completed notes)
+              | Hide completed
+              a.toggleAlwaysShowComplete Always Show Complete
+          else
+            | Show completed ({{completedCount}} completed notes)
   

@@ -503,12 +503,10 @@ Template.bulletNoteItem.toggleChildren = function(instance) {
 
   // If we haven't set session to show it to expand, expand it now.
   if (!Session.get(`expand_${instance.data._id}`)) {
-    $(instance.firstNode).find('.childWrap').first().hide();
     Session.set(`expand_${instance.data._id}`, true);
     // Hacky fun to let Meteor render the child notes first
     return setTimeout(function() {
       $(instance.firstNode).find('ol').first().hide();
-      $(instance.firstNode).find('.childWrap').first().show();
       return $(instance.firstNode).find('ol').first().slideDown();
     }
     , 1);
