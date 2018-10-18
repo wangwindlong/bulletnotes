@@ -474,7 +474,7 @@ export var makeChild = new ValidatedMethod({
       rank = val3 != null ? val3 : null,
       val4 = obj.expandParent,
       expandParent = val4 != null ? val4 : true;
-    if (!this.userId || !Notes.isEditable(noteId, shareKey)) {
+    if (!Meteor.isServer && (!this.userId || !Notes.isEditable(noteId, shareKey))) {
       throw new (Meteor.Error)('not-authorized');
     }
 
@@ -487,7 +487,7 @@ export var makeChild = new ValidatedMethod({
       parent = Notes.findOne(parent);
     }
 
-    if (rank === null) {
+    if (rank < 1) {
       if (upperSibling) {
         upperSibling = Notes.findOne(upperSibling);
         rank = upperSibling.rank + 1;
@@ -498,11 +498,15 @@ export var makeChild = new ValidatedMethod({
       }
     }
 
-    if (rank === null) {
+    if (rank < 1) {
       rank = 1;
     }
 
-    tx.start('Move Note');
+    let makeTx = false
+    if (Meteor.isClient) {
+      tx.start('Move Note');
+      makeTx = true
+    }
     let parentId = null;
     const level = 0;
     if (parent) {
@@ -514,14 +518,16 @@ export var makeChild = new ValidatedMethod({
         showChildren: true,
         childrenLastShown: new Date
       }
-      }, {tx: true });
+      }, {tx: makeTx });
     }
     Notes.update(noteId, {$set: {
       rank,
       parent: parentId
     }
-    }, {tx: true });
-    tx.commit();
+    }, {tx: makeTx });
+    if (Meteor.isClient) {
+      tx.commit();
+    }
 
     if (oldParent) {
       Meteor.call('notes.denormalizeChildCount',

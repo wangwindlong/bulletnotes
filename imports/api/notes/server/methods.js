@@ -12,7 +12,6 @@ import SimpleSchema from 'simpl-schema';
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 const Dropbox = require('dropbox');
 
-import rankDenormalizer from '/imports/api/notes/rankDenormalizer.js';
 import childCountDenormalizer from '/imports/api/notes/childCountDenormalizer.js';
 
 import { Notes } from '/imports/api/notes/notes.js';
@@ -185,12 +184,15 @@ export var inbox = new ValidatedMethod({
       const noteId = Notes.insert({
         title,
         body,
-        parent: parentId,
         owner: userId,
         createdAt: new Date(),
-        rank: 0,
         complete: false
       });
+
+      Meteor.call('notes.makeChild', {
+        noteId,
+        parent: parentId,
+      })
 
       Meteor.call('notes.updateTitle', {
         noteId,
@@ -202,8 +204,6 @@ export var inbox = new ValidatedMethod({
       Meteor.users.update(userId,
         {$inc:{"notesCreated":1}});
 
-      Meteor.defer(() => rankDenormalizer.updateChildren(parentId));
-    
       return noteId;
     }
   }
@@ -249,25 +249,11 @@ export var denormalizeChildCount = new ValidatedMethod({
   }
 });
 
-export var denormalizeRanks = new ValidatedMethod({
-  name: 'notes.denormalizeRanks',
-  validate: new SimpleSchema({
-    noteId: Notes.simpleSchema().schema('_id')})
-  .validator({
-    clean: true,
-    filter: false
-  }),
-  run({ noteId }) {
-    return Meteor.defer(() => rankDenormalizer.updateChildren(noteId));
-  }
-});
-
 // Get note of all method names on Notes
 const NOTES_METHODS = _.pluck([
   notesExport,
   dropboxExport,
   dropboxNightly,
-  denormalizeRanks,
   summary,
   inbox
 ], 'name');

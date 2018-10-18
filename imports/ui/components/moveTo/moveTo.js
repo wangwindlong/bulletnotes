@@ -30,8 +30,7 @@ Template.moveTo.events({
             noteId: instance.data._id,
             parent: selected._id,
             shareKey: FlowRouter.getParam('shareKey'),
-            expandParent: false,
-            rank: 0
+            expandParent: false
         });
         return Template.App_body.showSnackbar({
             message: `Note moved to ${selected.title} successfully.`,
