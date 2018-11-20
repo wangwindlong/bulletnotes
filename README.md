@@ -57,6 +57,12 @@ That's it! Note: You may have to run this several times when first starting to g
 
 Create a Heroku app. Add an mLab addon for your database. Fork this repo and deploy your forked branch to Heroku as normal, as per Heroku's documentation. Set your buildpack to https://github.com/AdmitHub/meteor-buildpack-horse.git
 
+## Docker Deployment
+
+There is a Docker image available, though it is fairly large (over 4GB) it does indeed work.
+
+Easiest way to get running is to just do a `docker-compose up` in the root directory.
+
 ## Background Images
 
 All images in public/img/bgs are CC0 License, Free for personal and commercial use, No attribution required
