@@ -296,36 +296,6 @@ export var stopSharing = new ValidatedMethod({
   }
 });
 
-export var updateLocation = new ValidatedMethod({
-  name: 'notes.updateLocation',
-  validate: new SimpleSchema({
-    noteId: Notes.simpleSchema().schema('_id'),
-    lat: Notes.simpleSchema().schema('lat'),
-    lon: Notes.simpleSchema().schema('lon'),
-    shareKey: Notes.simpleSchema().schema('shareKey')}).validator({
-    clean: true,
-    filter: false
-  }),
-  run(...args) {
-    const obj = args[0],
-      { noteId,
-      lat,
-      lon } = obj,
-      val = obj.shareKey,
-      shareKey = val != null ? val : null;
-    const note = Notes.findOne(noteId);
-
-    if (!Notes.isEditable(noteId, shareKey)) {
-      throw new (Meteor.Error)('not-authorized');
-    }
-
-    return Notes.update(noteId, {$set: {
-      lat,
-      lon
-    }}, {tx: true});
-  }
-});
-
 export var setEncrypted = new ValidatedMethod({
   name: 'notes.setEncrypted',
   validate: new SimpleSchema({
@@ -436,8 +406,9 @@ export var updateTitle = new ValidatedMethod({
       updatedBy: this.userId,
       complete
     }}, {tx: createTransaction});
-
+console.log(createTransaction)
     if (createTransaction) {
+      console.log("Commit!")
       tx.commit();
     }
 
@@ -761,7 +732,6 @@ const NOTES_METHODS = _.pluck([
   remove,
   makeChild,
   outdent,
-  updateLocation,
   setEncrypted,
   setShowChildren,
   setShowContent,

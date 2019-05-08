@@ -6,14 +6,12 @@
  */
 const { Template } = require('meteor/templating');
 const { Notes } = require('/imports/api/notes/notes.js');
-const { Files } = require('/imports/api/files/files.js');
 const { ReactiveDict } = require('meteor/reactive-dict');
 
 import SimpleSchema from 'simpl-schema';
 
 require('./bulletNoteItem.jade');
 
-require('/imports/ui/components/fileItem/fileItem.js');
 require('/imports/ui/components/share/share.js');
 require('/imports/ui/components/encrypt/encrypt.js');
 require('/imports/ui/components/moveTo/moveTo.js');
@@ -52,7 +50,6 @@ Template.bulletNoteItem.isValidImageUrl = (url, callback) =>
 
 Template.bulletNoteItem.onCreated(function(count) {
   let handle;
-  Meteor.subscribe('files.note', this.data._id);
   if (this.data.showChildren && this.data.children && !FlowRouter.getParam('searchParam')) {
     Meteor.call('notes.setChildrenLastShown', {
       noteId: this.data._id
@@ -64,7 +61,6 @@ Template.bulletNoteItem.onCreated(function(count) {
     focused: false,
     showComplete: false
   });
-  this.currentUpload = new ReactiveVar(false);
   const query = Notes.find({_id:this.data._id});
 
   return handle = query.observeChanges({
@@ -91,14 +87,6 @@ Template.bulletNoteItem.helpers({
 
   count() {
     return this.rank / 2;
-  },
-
-  files() {
-    return Files.find({noteId:this._id}, {
-      sort: {
-        'meta.created_at': -1
-      }
-    });
   },
 
   childNotes() {
@@ -226,8 +214,7 @@ Template.bulletNoteItem.helpers({
   },
 
   hasContent() {
-    Meteor.subscribe('files.note', this._id);
-    return (this.body || (Files.find({ noteId: this._id }).count() > 0));
+    return this.body;
   },
 
   canIndent() {
@@ -238,10 +225,6 @@ Template.bulletNoteItem.helpers({
 
   canUnindent() {
     return $(`#noteItem_${this._id}`).parentsUntil('.note-item').closest('.note-item').length;
-  },
-
-  currentUpload() {
-    return Template.instance().currentUpload.get();
   },
 
   showBody() {
@@ -465,31 +448,6 @@ Template.bulletNoteItem.events({
       });
     }
   },
-
-  'dragover .title, dragover .filesContainer'(event, instance) {
-    return $(event.currentTarget).closest('.noteContainer').addClass('dragging');
-  },
-
-  'dragleave .title, dragleave .filesContainer'(event, instance) {
-    return $(event.currentTarget).closest('.noteContainer').removeClass('dragging');
-  },
-
-  // 'drop .noteContainer': (event, instance) ->
-  //   event.preventDefault()
-  //   event.stopPropagation()
-  //   if event.toElement
-  //     console.log "Move file!"
-  //   else if event.originalEvent.dataTransfer
-  //     for file in event.originalEvent.dataTransfer.files
-  //       Template.bulletNoteItem.upload file, instance
-
-  'change .fileInput'(event, instance) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-
-    return Array.from(event.currentTarget.files).map((file) =>
-      Template.bulletNoteItem.upload(file, instance));
-  }
 });
 
 Template.bulletNoteItem.toggleChildren = function(instance) {
@@ -590,45 +548,3 @@ Template.bulletNoteItem.addAutoComplete = target =>
 }
   )
 ;
-
-
-Template.bulletNoteItem.upload = function(file, template) {
-  if (file) {
-    let uploadInstance;
-    try {
-      uploadInstance = Files.insert({
-        file,
-        streams: 'dynamic',
-        chunkSize: 'dynamic'
-      }, false);
-    } catch (e) {
-      console.log(e);
-    }
-    uploadInstance.on('start', function() {
-      return template.currentUpload.set(this);
-    });
-
-    uploadInstance.on('end', function(error, fileObj) {
-      if (error) {
-        Template.App_body.showSnackbar({
-          message: `Error during upload: ${error.reason}`});
-      } else {
-        Template.App_body.showSnackbar({
-          message: `File "${fileObj.name}" successfully uploaded`});
-        Meteor.call('files.setNote', {
-            noteId: template.data._id,
-            fileId: fileObj._id
-          }
-        );
-        setShowContent.call({
-          noteId: template.data._id,
-          showContent: true
-        });
-      }
-
-      return template.currentUpload.set(false);
-    });
-
-    return uploadInstance.start();
-  }
-};

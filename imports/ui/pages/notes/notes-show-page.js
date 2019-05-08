@@ -16,8 +16,6 @@ import './notes-show-page.jade'
 import '/imports/ui/pages/404/app-not-found.js';
 import '/imports/ui/components/bulletNotes/bulletNotes.js';
 import '/imports/ui/components/kanban/kanban.js';
-import '/imports/ui/components/calendar/calendar.js';
-import '/imports/ui/components/map/map.js';
 
 Template.Notes_show_page.onCreated(function() {
   return this.getNoteId = () => FlowRouter.getParam('noteId');
@@ -74,25 +72,13 @@ Template.Notes_show_page.events({
 
 Template.Notes_show_page.helpers({
   showNotes() {
-    if ((Session.get('viewMode') !== "kanban") && (Session.get('viewMode') !== "calendar") && (Session.get('viewMode') !== "map")) {
+    if ((Session.get('viewMode') !== "kanban")) {
       return true;
     }
   },
 
   showKanban() {
     if (Session.get('viewMode') === "kanban") {
-      return true;
-    }
-  },
-
-  showCalendar() {
-    if (Session.get('viewMode') === "calendar") {
-      return true;
-    }
-  },
-
-  showMap() {
-    if (Session.get('viewMode') === "map") {
       return true;
     }
   },

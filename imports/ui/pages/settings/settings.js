@@ -61,22 +61,10 @@ Template.App_settings.events({
       T9n.setLanguage(Meteor.user().language);
       return TAPi18n.setLanguage(Meteor.user().language);
     });
-  },
-
-  'click #enableLocation'(event, instance) {
-    if (!Meteor.user().storeLocation) {
-      return navigator.geolocation.getCurrentPosition(location =>
-        Meteor.call('users.setStoreLocation',
-          {storeLocation: !Meteor.user().storeLocation})
-      );
-    }
   }
 });
 
 Template.App_settings.helpers({
-  storeLocation() {
-    return Meteor.user().storeLocation;
-  },
   dropbox_token() {
     setTimeout(function() {
       const dbx = new Dropbox({clientId: Meteor.settings.public.dropbox_client_id});

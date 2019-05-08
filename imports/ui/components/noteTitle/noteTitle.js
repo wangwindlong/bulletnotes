@@ -59,24 +59,6 @@ Template.noteTitle.saveTitle = function(event, instance) {
     const dirtyTimer = setTimeout(() => instance.state.set('dirty', true)
     , 1000);
 
-    if (Meteor.user().storeLocation && navigator.geolocation) {
-      const success = position =>
-        Meteor.call('notes.updateLocation', {
-          noteId: instance.data.note._id,
-          shareKey: FlowRouter.getParam('shareKey'),
-          lat: position.coords.latitude,
-          lon: position.coords.longitude
-        }
-        )
-      ;
-
-      error = error =>
-        Template.App_body.showSnackbar({
-          message: `Couldn't get location${error.code}`})
-      ;
-      navigator.geolocation.getCurrentPosition(success, error);
-    }
-
     return Meteor.call('notes.updateTitle', {
       noteId: instance.data.note._id,
       title,
@@ -129,13 +111,6 @@ Template.noteTitle.events({
       case 219:
         if (event.metaKey) {
           return FlowRouter.go(`/note/${instance.data.parent}`);
-        }
-        break;
-
-      // U - Upload
-      case 85:
-        if (event.metaKey && event.shiftKey) {
-          return $(`#noteItem_${instance.data._id}`).find('.fileInput').first().trigger('click');
         }
         break;
 

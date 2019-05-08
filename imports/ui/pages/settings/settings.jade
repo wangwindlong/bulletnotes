@@ -31,20 +31,6 @@ template(name="App_settings")
       .mdl-cell.mdl-cell--6-col
         .mdl-card.mdl-shadow--2dp.mdl--centered
           .mdl-card__title
-            h2.mdl-card__title-text Location
-          .mdl-card__supporting-text
-            if storeLocation
-              label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect(for='enableLocation')
-                input#enableLocation.mdl-switch__input(type='checkbox',checked='checked')
-            else
-              label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect(for='enableLocation')
-                input#enableLocation.mdl-switch__input(type='checkbox')
-            span.mdl-switch__label Store your location when you create notes
-
-
-      .mdl-cell.mdl-cell--6-col
-        .mdl-card.mdl-shadow--2dp.mdl--centered
-          .mdl-card__title
             h2.mdl-card__title-text {{_ 'layouts.appBody.import'}}/{{_ 'layouts.appBody.export'}}
           .mdl-card__supporting-text
             | Here you can generate an Export, which is just a list of notes in flat text format. Copy and paste it somewhere to back it up, or import it somewhere else.

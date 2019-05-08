@@ -18,8 +18,6 @@ Meteor.publish('users.prefs', function() {
       language: 1,
       isPro: 1,
       apiKey: 1,
-      storeLocation: 1,
-      uploadedFilesSize: 1,
       services: 1,
       notesCreated: 1
     }

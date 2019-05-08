@@ -9,10 +9,6 @@ import '/imports/api/notes/server/methods.js'
 import '/imports/api/notes/server/publications.js'
 import '/imports/api/notes/server/routes.js'
 
-import '/imports/api/files/server/files.js'
-import '/imports/api/files/server/publications.js'
-import '/imports/api/files/server/methods.js'
-
 import '/imports/api/tags/tags.js'
 import '/imports/api/tags/server/methods.js'
 

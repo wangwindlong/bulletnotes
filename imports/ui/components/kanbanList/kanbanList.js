@@ -6,7 +6,6 @@
 const { Template } = require('meteor/templating');
 const { ReactiveDict } = require('meteor/reactive-dict');
 const { Notes } = require('/imports/api/notes/notes.js');
-const { Files } = require('/imports/api/files/files.js');
 
 require('./kanbanList.jade');
 require('/imports/ui/components/kanbanListItem/kanbanListItem.js');
@@ -29,14 +28,6 @@ Template.kanbanList.helpers({
       rank: 1
     }
   });
-  },
-
-  photo() {
-    Meteor.subscribe('files.note', this._id);
-    const file = Files.findOne({ noteId: this._id });
-    if (file) {
-      return file.data;
-    }
   },
 
   title() {

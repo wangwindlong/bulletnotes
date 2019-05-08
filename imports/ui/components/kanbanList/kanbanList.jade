@@ -4,8 +4,6 @@ template(name='kanbanList')
       +noteMenu
       +noteTitle(note=this)
       +noteBody(kanbanListBodyArgs this)
-    if photo
-      img(src=photo,width="100%")
     
     ul.kanbanChildNotes
       +each childNotes

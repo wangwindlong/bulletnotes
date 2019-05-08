@@ -109,12 +109,6 @@ Template.noteMenu.events({
     });
   },
 
-  'click .upload'(event, instance) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    return $(`#noteItem_${instance.data._id}`).find('.fileInput').first().trigger('click');
-  },
-
   'click .favorite, click .unfavorite'(event, instance) {
     event.preventDefault();
     event.stopImmediatePropagation();

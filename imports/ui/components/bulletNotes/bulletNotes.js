@@ -16,7 +16,6 @@ import { TAPi18n } from 'meteor/tap:i18n';
 import sanitizeHtml from 'sanitize-html';
 
 import { Notes } from '/imports/api/notes/notes.js';
-import { Files } from '/imports/api/files/files.js';
 
 import './bulletNotes.jade';
 
@@ -84,23 +83,6 @@ Template.bulletNotes.onCreated(function() {
 Template.bulletNotes.onRendered(function() {
   $('.title-wrapper').show();
   Template.App_body.recordEvent('notesRendered', {owner: this.userId});
-
-  return setTimeout(function() {
-    $('.fileItem').draggable({
-      revert: true});
-
-    return $('.noteContainer').droppable({
-      drop(event, ui ) {
-        event.stopImmediatePropagation();
-        return Meteor.call('files.setNote', {
-          fileId: ui.draggable.context.dataset.id,
-          noteId: $(event.target).parent().data('id')
-        }
-        );
-      }
-    });
-  }
-  , 1500);
 });
   
 Template.bulletNotes.helpers({
@@ -148,15 +130,6 @@ Template.bulletNotes.helpers({
     }
     )
     );
-  },
-
-  focusedNoteFiles() {
-    Meteor.subscribe('files.note', FlowRouter.getParam('noteId'));
-    try {
-      return Files.find({ noteId: FlowRouter.getParam('noteId') });
-    } catch (e) {
-      return console.log(e);
-    }
   },
 
   focusedNoteBody() {
@@ -214,24 +187,6 @@ Template.bulletNotes.events({
   'mousedown .js-cancel, click .js-cancel'(event, instance) {
     event.preventDefault();
     return instance.state.set('editing', false);
-  },
-
-  'click .uploadHeaderBtn'(event, instance) {
-    const input = $(document.createElement('input'));
-    input.attr("type", "file");
-    input.trigger('click');
-    return input.change(function(submitEvent) {
-      const file = submitEvent.currentTarget.files[0];
-      const { name } = file;
-      return Template.bulletNoteItem.encodeImageFileAsURL(res =>
-        upload.call({
-          noteId: instance.data.note()._id,
-          data: res,
-          name
-        }, (err, res) => $(event.currentTarget).closest('.noteContainer').removeClass('dragging'))
-      
-      , file);
-    });
   },
 
   'click .newNote'(event, instance) {

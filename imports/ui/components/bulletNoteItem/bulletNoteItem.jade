@@ -21,7 +21,6 @@ template(name='bulletNoteItem')
         .progress.progress-striped(data-toggle="tooltip", data-placement="top", title="{{progress}}% Complete", data-original-title="{{progress}}% Complete")
           .progress-bar(class='progress-bar-{{progressClass}}' role='progressbar', aria-valuenow='{{progress}}', aria-valuemin='0', aria-valuemax='100', style='width: {{progress}}%')
             span.sr-only {{progress}}% Complete (success)
-      input.fileInput(type='file',style='display:none')
       
       if showDetailCard
         +noteDetailCard
@@ -29,10 +28,6 @@ template(name='bulletNoteItem')
       if showContent
         if showBody
           +noteBody(bodyArgs this)
-        if files
-          .filesContainer
-            each file in files.each
-              +fileItem(fileArgs file)
         a.hideContent(id="hideContent_{{_id}}")
           i.glyphicon.glyphicon-chevron-up
         .mdl-tooltip.mdl-tooltip--large(for='hideContent_{{_id}}')
@@ -43,11 +38,6 @@ template(name='bulletNoteItem')
             i.glyphicon.glyphicon-chevron-down
           .mdl-tooltip.mdl-tooltip--large(for='showContent_{{_id}}')
             | {{_ 'notes.tooltips.show_content'}}
-      with currentUpload
-        | Uploading 
-        b {{file.name}}
-        | : 
-        span#progress {{progress.get}}%
   
     if childNotes
       ol

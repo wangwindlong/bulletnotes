@@ -19,11 +19,6 @@ Template.menu.onRendered(() =>
     }
 
     if (Meteor.user()) {
-      const filesPercentFull = (Meteor.user().uploadedFilesSize / Template.App_body.getUploadBitsAllowed()) * 100; 
-      if (document.querySelector('#fileSpaceUsedBar')) {
-        document.querySelector('#fileSpaceUsedBar').MaterialProgress.setProgress(filesPercentFull);
-      }
-
       // THis is hacky. Should be somewhere else.
       if (Meteor.user().language) {
         T9n.setLanguage(Meteor.user().language);
@@ -161,10 +156,6 @@ Template.menu.helpers({
     if (!Meteor.user().muted) {
       return 'mdl-button--colored';
     }
-  },
-
-  maxFileUpload() {
-    return filesize(Template.App_body.getUploadBitsAllowed());
   },
 
   getFileSize(number) {

@@ -6,11 +6,6 @@ template(name='bulletNotes')
           | {{{focusedNoteBody}}}
         else
           |  
-    if focusedNoteFiles
-      .filesContainer
-        each focusedNoteFiles
-          +file
-
     if notesReady
       each notes
         +bulletNoteItem

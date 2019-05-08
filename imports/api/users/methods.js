@@ -29,20 +29,6 @@ export var setTelegramId = new ValidatedMethod({
       {$set:{"telegramId":id}});
   }});
 
-export var setStoreLocation = new ValidatedMethod({
-  name: 'users.setStoreLocation',
-  validate: new SimpleSchema({
-    storeLocation: {
-      type: Boolean
-    }}).validator({
-    clean: true,
-    filter: false
-  }),
-  run({ storeLocation }) {
-    return Meteor.users.update({_id:this.userId},
-      {$set:{"storeLocation":storeLocation}});
-  }});
-
 export var setDropboxOauth = new ValidatedMethod({
   name: 'users.setDropboxOauth',
   validate: new SimpleSchema({

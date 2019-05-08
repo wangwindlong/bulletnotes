@@ -8,10 +8,8 @@ template(name="menu")
 
       if currentUser
         .mdl-layout-spacer
-          p File Space: {{getFileSize currentUser.uploadedFilesSize}} / {{maxFileUpload}}
-          #fileSpaceUsedBar.mdl-progress.mdl-js-progress
           if currentUser.isPro
-            | Thank you for upgrading to Pro!
+            | Thank you for upgrading to Pro! You have created {{getCount 'notes.count.user'}} notes.
           else
             p Note Space: {{getCount 'notes.count.user'}} / {{totalNotesAllowed}}
             #noteSpaceUsedBar.mdl-progress.mdl-js-progress

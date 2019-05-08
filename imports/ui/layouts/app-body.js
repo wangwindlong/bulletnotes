@@ -469,11 +469,6 @@ Template.App_body.events({
     }
   },
 
-  'click #calendarMode'() {
-    Session.set('viewMode','calendar');
-    return $(".mdl-layout__content").animate({ scrollTop: 0 }, 200);
-  },
-
   'click #noteMode'() {
     Session.set('viewMode','note');
     return $(".mdl-layout__content").animate({ scrollTop: 0 }, 200);
@@ -484,10 +479,6 @@ Template.App_body.events({
     return $(".mdl-layout__content").animate({ scrollTop: 0 }, 200);
   },
 
-  'click #mapMode'() {
-    Session.set('viewMode','map');
-    return $(".mdl-layout__content").animate({ scrollTop: 0 }, 200);
-  }
 });
 
 Template.App_body.showSnackbar = data => document.querySelector('#snackbar').MaterialSnackbar.showSnackbar(data);

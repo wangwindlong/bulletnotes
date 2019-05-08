@@ -35,8 +35,7 @@
       "decrypt": "Decrypt",
       "moveTo": "Move to..",
       "indent": "Indent",
-      "unindent": "Unindent",
-      "upload": "Upload a file"
+      "unindent": "Unindent"
     },
     "show": {
       "cancel": "Cancel",
@@ -108,7 +107,6 @@
       "admin": "Admin",
       "noteMode": "Bullet Notes Mode",
       "kanbanMode": "Kanban Mode",
-      "calendarMode": "Calendar Mode",
       "support": "Support",
       "userGuide": "User Guide",
       "terms": "Terms and Conditions",
@@ -137,7 +135,6 @@
     "intro": {
       "begin": "Welcome to BulletNotes.io! BulletNotes is the easiest way to keep everything in your life organized, while also keeping it private, and future safe.<br/><br/>It can export all your notes every night to a flat text file in your DropBox account, so even if this service goes away tomorrow, you don't lose all your notes. Also since the code is open source, you can run it on your computer and not rely on anyone else!",
       "noteMode": "BulletNotes.io has 3 main views. The default is Bullet Notes view where notes are nested under each other, and can be expanded and collapsed.",
-      "calendarMode": "The Calendar view lets you drag items onto a calendar to be scheduled.",
       "kanbanMode": "Kanban view gives you a classic GTD style interface into your notes.",
       "viewModes": "Whichever mode you pick, you can zoom into notes by opening their menu and clicking 'Zoom in'. This will make that the new Top Level note, and only display notes underneath that note.",
       "breadcrumbs": "To navigate back up through your note tree, you can use this breadcrumbs panel.",
