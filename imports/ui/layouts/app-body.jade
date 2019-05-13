@@ -37,6 +37,13 @@ template(name='App_body')
                     i#botIcon.material-icons chat
                 .mdl-tooltip.mdl-tooltip--large(for='botIcon')
                     | {{_ 'layouts.appBody.botLink'}}
+                a#tagListButton.mdl-button.mdl-js-button.mdl-button--icon
+                    i#tagListIcon #
+                .mdl-tooltip.mdl-tooltip--large(for='tagListIcon')
+                    | {{_ 'layouts.appBody.tagListLink'}}
+                if showTagList
+                  +tagList
+
 
             .mdl-layout__tab-bar.mdl-js-ripple-effect(data-intro="{{_ 'tours.intro.breadcrumbs' }}", data-step='6')
               +breadcrumbs (noteArgs focusedNoteId)

@@ -18,9 +18,11 @@ import { $ } from 'meteor/jquery';
 import { Notes } from '/imports/api/notes/notes.js';
 import { insert } from '/imports/api/notes/methods.js';
 
+import './app-body.jade';
+
 import '/imports/ui/components/loading/loading.js';
 import '/imports/ui/components/menu/menu.js';
-import './app-body.jade';
+import '/imports/ui/components/tagList/tagList.js';
 import '/imports/ui/lib/emoji.js';
 
 const CONNECTION_ISSUE_TIMEOUT = 5000;
@@ -270,6 +272,9 @@ Template.App_body.events({
     Session.set('showBotWidget', true);
     return setTimeout(() => $('#chatInput').focus()
     , 250);
+  },
+  'click #tagListButton'(event, instance) {
+    Session.set('showTagList', !Session.get('showTagList'));
   }
 });
 
@@ -370,6 +375,10 @@ Template.App_body.helpers({
 
   showBotWidget() {
     return Session.get('showBotWidget');
+  },
+
+  showTagList() {
+    return Session.get('showTagList');
   },
 
   noteArgs() {

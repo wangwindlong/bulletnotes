@@ -23,7 +23,6 @@ Template.Notes_show_page.onCreated(function() {
 
 Template.Notes_show_page.onRendered(function() {
   analytics.page('Note View');
-  Session.set('searchTerm', FlowRouter.getParam('searchTerm'));
   return this.autorun(() => {
     if (Meteor.user()) {
       Meteor.call('notes.setChildrenLastShown', {
@@ -146,7 +145,8 @@ Template.Notes_show_page.helpers({
   },
 
   searchTerm() {
-    return FlowRouter.getParam('searchTerm');
+    // return FlowRouter.getParam('searchTerm');
+    return 'beer';
   },
 
   // We use #each on an array of one item so that the "note" template is
