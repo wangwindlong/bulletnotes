@@ -18,7 +18,8 @@ Template.moveTo.helpers({
                     collection: Notes,
                     field: 'title',
                     template: Template.notePill,
-                    matchAll: true
+                    matchAll: true,
+                    sort: 'title'
                 }
             ]
         };
