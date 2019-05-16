@@ -1,4 +1,4 @@
 # These are files for Heroku to ignore.
 
-BulletNotesDemo.gif
-node_modules/electron/
+/BulletNotesDemo.gif
+/node_modules/electron/
