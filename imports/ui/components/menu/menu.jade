@@ -39,9 +39,9 @@ template(name="menu")
           //- .mdl-tooltip.mdl-tooltip--large(for='mute')
           //-   | Toggle Sounds
           button#recentMenu.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect.mdl-button--colored.mdl-button--raised(class="{{muteClass}}")
-            i.material-icons search
+            i.material-icons alarm
           .mdl-tooltip.mdl-tooltip--large(for='recentMenu')
-            | Special Searches
+            | Time Filter
         div.mdl-menu.mdl-menu--bottom-left.mdl-js-menu.mdl-js-ripple-effect(for='recentMenu')
           a.mdl-menu__item.recentLink(href='/search/last-changed%3a1h') {{_ 'layouts.appBody.lastHour'}}
           a.mdl-menu__item.recentLink(href='/search/last-changed%3a24h') {{_ 'layouts.appBody.lastDay'}}

@@ -19,7 +19,7 @@ Notes.hashtagPattern = /(((^|\s)#)([a-z\d-]+))/gim;
 
 Notes.namePattern = /(((^|\s)@)([a-z\d-]+))/gim;
 
-Notes.isEditable = function(id, shareKey) {
+Notes.isEditable = function (id, shareKey) {
   if (!Meteor.user()) {
     return false;
   }
@@ -36,7 +36,7 @@ Notes.isEditable = function(id, shareKey) {
   }
 };
 
-Notes.getSharedParent = function(id, shareKey) {
+Notes.getSharedParent = function (id, shareKey) {
   let note = Notes.findOne(id);
   while (note && ((note.shareKey !== shareKey) || (note.shared === false))) {
     note = Notes.findOne(note.parent);
@@ -46,12 +46,12 @@ Notes.getSharedParent = function(id, shareKey) {
   }
 };
 
-Notes.isOwner = function(id) {
+Notes.isOwner = function (id) {
   const note = Notes.findOne(id);
   return note && (Meteor.userId() === note.owner);
 };
 
-Notes.filterBody = function(body) {
+Notes.filterBody = function (body) {
   if (!body) {
     return false;
   }
@@ -68,7 +68,7 @@ Notes.filterBody = function(body) {
   });
 };
 
-Notes.filterTitle = function(title) {
+Notes.filterTitle = function (title) {
   if (!title) {
     return false;
   }
@@ -85,7 +85,7 @@ Notes.filterTitle = function(title) {
   });
 };
 
-Notes.search = function(search, userId = null, limit) {
+Notes.search = function (search, userId = null, limit) {
   let match, myRegexp;
   if (limit == null) { limit = 100; }
   check(search, Match.Maybe(String));
@@ -93,36 +93,35 @@ Notes.search = function(search, userId = null, limit) {
   const projection = {
     limit,
     sort: {
-      childrenLastShown: 1
+      childrenLastShown: 1,
+      createdAt: -1
     }
   };
   if (!userId) {
-    userId =  Meteor.userId();
+    userId = Meteor.userId();
   }
   if (search.indexOf('last-changed:') === 0) {
     myRegexp = /last-changed:([0-9]+)([a-z]+)/gim;
     match = myRegexp.exec(search);
     query = {
-      updatedAt: { $gte: moment().subtract(match[1], match[2]).toDate()
-    },
+      updatedAt: { $gte: moment().subtract(match[1], match[2]).toDate() },
       owner: userId
     };
   } else if (search.indexOf('not-changed:') === 0) {
     myRegexp = /not-changed:([0-9]+)([a-z]+)/gim;
     match = myRegexp.exec(search);
     query = {
-      updatedAt: { $lte: moment().subtract(match[1], match[2]).toDate()
-    },
+      updatedAt: { $lte: moment().subtract(match[1], match[2]).toDate() },
       owner: userId
     };
   } else if (search.indexOf('not-viewed:') === 0) {
     myRegexp = /not-viewed:([0-9]+)([a-z]+)/gim;
     match = myRegexp.exec(search);
     query = {
-      childrenLastShown: { $lte: moment().subtract(match[1], match[2]).toDate()
-    },
-      children: { $gte: 1
-    },
+      childrenLastShown: { $lte: moment().subtract(match[1], match[2]).toDate() },
+      children: {
+        $gte: 1
+      },
       owner: userId
     };
   } else {
@@ -132,7 +131,7 @@ Notes.search = function(search, userId = null, limit) {
       owner: userId
     };
   }
-  query.deleted = {$exists: false};
+  query.deleted = { $exists: false };
   return Notes.find(query, projection);
 };
 
