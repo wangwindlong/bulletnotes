@@ -6,7 +6,7 @@
   "scripts": {
     "start": "METEOR_PACKAGE_DIRS=$HOME/Code meteor -p 3000 --settings settings.private.json --mobile-server=http://192.168.1.124:3000",
     "bunvis": "meteor --extra-packages bundle-visualizer --production -p 3000 --settings settings.private.json",
-    "pretest": "coffeelint imports/; meteor reset",
+    "pretest": "meteor reset",
     "test": "meteor test --once --driver-package dispatch:mocha-phantomjs --port 3333 --settings settings.json",
     "test-app": "meteor test --full-app --once --driver-package dispatch:mocha-phantomjs",
     "test-watch": "meteor test --driver-package practicalmeteor:mocha",
