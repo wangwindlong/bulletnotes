@@ -103,6 +103,7 @@ export var insert = new ValidatedMethod({
       parent: parentId,
       rank,
       createdAt: new Date(),
+      updatedAt: new Date,
       complete,
       showChildren,
       createdBy: ownerId

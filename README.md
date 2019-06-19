@@ -45,6 +45,7 @@ Clone the repo.
 
 ```
 cd BulletNotes
+touch settings.private.json
 meteor npm install
 meteor npm install --save-dev meteor-desktop
 meteor npm install --save gm
