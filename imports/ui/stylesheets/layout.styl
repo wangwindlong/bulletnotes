@@ -1,0 +1,298 @@
+body
+    background-color: #7bcadb
+    background-size: cover !important
+    background-attachment: fixed
+    background-position: right top
+    background-repeat: no-repeat
+    font-size: 1em
+
+.mdl-layout--fixed-drawer
+  .mdl-layout__obfuscator
+    display: none !important
+
+.ui-selecting { background: #FECA40; }
+.ui-selected { background: #F39814; color: white; }
+
+.modal-dialog
+  margin-top: 10em
+
+#siteFooter
+  margin-bottom: 100%
+  
+  input[type="radio"], input[type="checkbox"]
+    margin: -16px 0 0;
+
+#scrollToTopWrap
+  text-align: center
+  color: white
+  font-size: 2em
+  opacity: .7
+#scrollToTop
+  margin: 1em auto
+
+@media screen and (max-width: 64em)
+  #menuPin
+    display: none
+
+.mdl-navigation
+  text-align: center
+  .buttonWrap
+    display: inline-block
+    margin: 1em
+
+.mdl-layout__drawer
+  background: rgba(0, 0, 0, 0.7)
+  color: white
+  overflow-y: scroll
+  overflow-x: hidden
+  .mdl-layout-title
+    margin-left: 1em
+  .mdl-layout-title a, .mdl-button
+    color: white
+.mdl-layout__drawer .mdl-navigation .mdl-navigation__link
+  color: rgba(255, 255, 255, 0.8)
+
+.mdl-layout__drawer .mdl-navigation .mdl-navigation__link:hover
+  color: rgba(0, 0, 0, 0.8)
+  text-decoration: none
+
+.mdl-layout__tab-bar-button, .mdl-layout__tab-bar, header .mdl-layout__drawer-button
+  background: none !important
+
+a.mdl-layout__tab:hover, a.mdl-layout__tab:focus
+  color: white !important
+
+.mdl-layout__tab
+  margin: 0 .25em
+  transition: box-shadow .25s 
+  box-shadow: 0px 0px 5px black
+
+.mdl-layout__tab.is-active
+  box-shadow: 0px 0px 5px white
+  font-weight: bold
+
+.mdl-layout__header.mdl-layout__header--waterfall
+  background: rgba(0,0,0,.2)
+  border-bottom: solid black 1px
+  box-shadow: 0px 3px 5px #000
+
+  .mdl-layout__tab
+    margin: 0 .5em
+
+  .mdl-layout__tab:hover
+    box-shadow: 0px 0px 5px white
+
+.modal
+  margin-top: 7em
+
+.favoriteNote
+  position: relative
+  .hotkeyHint
+    position: absolute
+    color: white
+    right: -0.1em;
+    font-size: 3em;
+    opacity: .5;
+    top: .3em
+
+@keyframes pulse
+  0% {transform: scale(.9);opacity:0;}
+  50% {transform: scale(1.2);opacity:.7;}
+  100% {transform: scale(.9);opacity:0;}
+
+.pulse, .noteTitle.dirty:after
+  animation-name: pulse
+  animation-duration: 2s
+  animation-iteration-count: infinite
+
+.loading
+  margin-top: 20em
+
+#nprogress
+  .bar
+    background-color: #22dd39
+  .spinner
+    display: none !important
+
+.extraPage
+  background-color: white
+  margin: 0 2em
+  border: solid 1px black
+  box-shadow: 0px 0px 5px black
+  padding: 2em
+  p
+    margin: 0 2em
+  .title-message
+    font-size: 2em
+  h4
+    margin: 1em
+  .btn
+    margin: 1em
+
+::-webkit-scrollbar
+    display: none
+
+#totalNotes, #totalNotesFall
+  float: left
+  margin-right: 1em
+  padding: 0 .35em
+  position: absolute
+
+#totalNotesSpacer
+  opacity: 0
+  padding: 0 .35em
+
+// .mdl-layout__obfuscator
+//   display: none
+
+.zoomingTitle
+  z-index: 500
+
+.mdl-layout__tab.is-active, .mdl-layout__tab.is-active:hover
+  cursor: default
+  text-decoration: none
+
+#noteMode, #kanbanMode, #modeBackground
+  position: absolute
+  top: -5px
+  transition: left .5s ease-in-out
+
+#kanbanMode
+  left: 40px
+
+// .title-wrapper.showingNotes
+//  margin-left: 4em
+
+.contentSection
+  margin: 0 1em
+  padding: 1em
+  background-color: white
+  box-shadow: 0px 0px 10px #000
+
+
+// Hacker theme
+$green = #00cf00
+body.Terminal
+  
+  background-image: none !important
+  background-color: black
+  font-family: 'PT Mono', monospace !important
+  font-size: 1.2em
+  color: $green
+    
+  .note-item
+    background: none
+    
+  .tag-white
+    border-color: white
+    color: white
+  .tag-red
+    color: red
+  .tag-orange
+    color: rgba(255, 216, 181, 1)
+  .tag-yellow
+    color: rgba(255, 250, 181, 1)
+  .tag-lime
+    color: rgba(225, 255, 181, 1)
+  .tag-olive
+    color: rgba(181, 255, 201, 1)
+  .tag-green
+    color: rgba(204, 255, 181, 1)
+  .tag-teal
+    color: rgba(181, 255, 215, 1)
+  .tag-aqua
+    color: rgba(181, 255, 252, 1)
+  .tag-blue
+    color: rgba(181, 232, 255, 1)
+  .tag-navy
+    color: rgba(63, 52, 255, 1)
+  .tag-fuchia, .tag-fuschia
+    color: rgba(241, 181, 255, 1)
+  .tag-pink
+    color: pink
+  .tag-purple
+    color: rgba(211, 181, 255, 1)
+  .tag-maroon
+    color: rgba(192, 143, 143, 1)
+  .tag-silver
+    color: rgba(192, 192, 192, 1)
+  
+  #siteFooter
+    background: none !important
+    color: $green
+    a
+      color: $green
+
+  #notes, .extraPage
+    margin-top: .5em
+    color: $green
+    background-color: black
+    border: solid $green 1px
+    
+  li.body
+    border-color: $green
+
+  .mdl-list__item, .mdl-card__title, .mdl-card__supporting-text
+    color: green
+  
+  .mdl-radio__outer-circle
+    border: 2px solid $green
+      
+  .note-item.focused
+    .title
+      box-shadow: 0px 0px 5px $green
+
+  .mdl-card
+    background-color: black
+    border: solid $green 1px
+    color: $green
+
+  #botWidgetWrap
+    border: solid $green 1px
+  #chatArea, #botPageWrap, #botWidgetWrap
+    background: black
+  #chatInput
+    background: black
+    box-shadow: 0px 0px 5px $green
+  
+  #botPageWrap::after, #botWidgetWrap::after
+    display: none
+
+  #settingsPage
+    .mdl-list__item:hover
+      border-color: $green
+// end Terminal Theme
+
+#settingsPage
+  .mdl-list__item
+    padding: 5px !important    
+
+// Hide the giant footer area
+body.Terminal, body.White
+  #siteFooter
+    margin-bottom: 0
+
+  #scrollToTopWrap
+    display: none !important
+
+body.White
+  .mdl-layout__header
+    background-color: gray;
+    
+.page.auth
+  padding-bottom: 1em
+  .at-social
+    margin: 1em
+  .at-oauth
+    overflow: hidden;
+    margin: 0 auto;
+    width: 35em;
+  .row
+    float: left;
+    margin: 1em;
+  .row.at-sep
+    margin: 1em auto;
+    float: none;
+  .at-pwd-form
+    width: 24em
+    margin: 1em auto

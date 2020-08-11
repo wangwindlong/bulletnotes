@@ -1,0 +1,71 @@
+template(name="App_settings")
+  #settingsPage.extraPage
+    .title-message {{_ 'layouts.appBody.settings'}}
+    .mdl-grid
+
+      .themeWrap.mdl-cell.mdl-cell--6-col
+        .mdl-card.mdl-shadow--2dp.mdl--centered
+          .mdl-card__title
+            h2.mdl-card__title-text Theme
+          .mdl-card__supporting-text
+            .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label.getmdl-select
+              img.selectIcon.mdl-list__item-avatar(src='/img/bgs/{{toLower currentUser.theme}}_thumb.jpg')
+              input#theme.selectInput.mdl-textfield__input(name='theme', value='{{currentUser.theme}}', type='text', readonly='', tabindex='-1')
+              ul#themes.mdl-menu.mdl-menu--bottom-left.mdl-js-menu(for='theme')
+                +each themes
+                  li.themeSelect.mdl-menu__item(value='', type='radio', name='theme', selected='{{themeChecked theme}}', id='theme_{{theme}}' data-name='{{theme}}') 
+                    img.mdl-list__item-avatar(src='/img/bgs/{{toLower theme}}_thumb.jpg')
+                    | {{theme}}
+
+      .languageWrap.mdl-cell.mdl-cell--6-col
+        .mdl-card.mdl-shadow--2dp.mdl--centered
+          .mdl-card__title
+            h2.mdl-card__title-text {{_ 'pages.settings.language'}}
+          .mdl-card__supporting-text
+              input#language.mdl-textfield__input(name='language', value='{{currentUser.language}}', type='text', readonly='', tabindex='-1')
+              ul#languages.mdl-menu.mdl-menu--bottom-left.mdl-js-menu(for='language')
+                +each languages
+                  li.languageSelect.mdl-menu__item(value='', type='radio', name='language', selected='{{languageChecked key}}', id='language_{{key}}' data-name='{{key}}') 
+                    | {{language}}
+
+      .mdl-cell.mdl-cell--6-col
+        .mdl-card.mdl-shadow--2dp.mdl--centered
+          .mdl-card__title
+            h2.mdl-card__title-text {{_ 'layouts.appBody.import'}}/{{_ 'layouts.appBody.export'}}
+          .mdl-card__supporting-text
+            | Here you can generate an Export, which is just a list of notes in flat text format. Copy and paste it somewhere to back it up, or import it somewhere else.
+            #exportSpinner(style='display:none')
+              i.glyphicon.glyphicon-refresh.glyphicon-spin
+            textarea#exportResult(style='display:none')
+          .mdl-card__actions.mdl-card--border
+            a#importLink.mdl-button.mdl-button--colored.mdl-js-button.mdl-js-ripple-effect(href='/import') {{_ 'layouts.appBody.import'}}
+            a#exportLink.mdl-button.mdl-button--colored.mdl-js-button.mdl-js-ripple-effect(href='#') {{_ 'layouts.appBody.export'}}
+
+      .mdl-cell.mdl-cell--6-col
+        .mdl-card.mdl-shadow--2dp.mdl--centered
+          .mdl-card__title
+            h2.mdl-card__title-text Dropbox
+          .mdl-card__supporting-text
+            | You can link your Dropbox account for a nightly backup.
+            | Each backup file can be imported straight into another instance of BulletNotes,
+            | or into something like Workflowy or Dynalist.
+          .mdl-card__actions.mdl-card--border
+            if dropbox_token
+              a#dropboxExportLink.mdl-button.mdl-button--colored.mdl-js-button.mdl-js-ripple-effect Export All Notes to Dropbox
+              a#deauthLink.mdl-button.mdl-button--colored.mdl-js-button.mdl-js-ripple-effect Unlink Dropbox Account
+            else
+              a#authlink.mdl-button.mdl-button--colored.mdl-js-button.mdl-js-ripple-effect Authenticate with Dropbox
+
+      .mdl-cell.mdl-cell--6-col
+        .mdl-card.mdl-shadow--2dp.mdl--centered
+          .mdl-card__title
+            h2.mdl-card__title-text API Key
+          .mdl-card__supporting-text
+            p Your API Key
+            input#apiKey.form-control.btn(value='{{currentUser.apiKey}}')
+          .mdl-card__actions.mdl-card--border
+            a#copyApiKey.mdl-button.mdl-button--colored.mdl-js-button.mdl-js-ripple-effect Copy
+            a#generateApiKey.mdl-button.mdl-button--colored.mdl-js-button.mdl-js-ripple-effect Generate a New API Key
+
+
+

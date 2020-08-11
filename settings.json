@@ -1,0 +1,25 @@
+{
+  "name": "BulletNotes.io",
+  "version": "0.0.1",
+  "public": {
+    "dropbox_client_id": "",
+    "dev": 1,
+    "noteLimit": 250,
+    "referralNoteBonus": 250,
+    "environment": "local",
+    "keenProjectId": "",
+    "keenWriteKey": "",
+    "analyticsSettings": {
+      "autorun"  : false,
+      "Amplitude": {"apiKey": ""}
+    },
+    "url": "http://localhost:3123",
+    "stripePublicKey": "",
+    "proPrice": "",
+    "maxFreeUploadBits": 104857600,
+    "maxProUploadBits": 1073741824
+  },
+  "telegramKey": "",
+  "stripeSecretKey": "",
+  "adminUserIds": [""]
+}

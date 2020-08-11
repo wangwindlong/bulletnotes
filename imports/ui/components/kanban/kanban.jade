@@ -1,0 +1,7 @@
+template(name='kanban')
+  .ui
+    .kanbanLists
+      +each childNotes
+        +kanbanList
+      .kanbanList.newKanbanList
+        header Add new column

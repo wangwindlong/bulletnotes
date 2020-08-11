@@ -1,0 +1,11 @@
+template(name='noteTitle')
+  .noteTitle(class=className)
+    if note.encryptedRoot
+      i.glyphicon.glyphicon-eye-close.encryptedIcon(title='This note is encrypted')
+    if note.displayEncrypted
+      div(class='encryptedTitle')
+    else
+      if editable
+        div(class='title', contenteditable='true')
+      else
+        div(class='title')

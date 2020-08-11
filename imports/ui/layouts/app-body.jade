@@ -1,0 +1,91 @@
+template(name='App_body')
+  +HammerTouchArea(gestureMap=templateGestures)
+    #container(class='{{wrapClasses}}')
+      .mdl-layout.mdl-js-layout
+        .mdl-layout.mdl-js-layout.mdl-layout--fixed-header(class="{{menuPin}}")
+          header.mdl-layout__header.mdl-layout__header--waterfall(data-intro="{{_ 'tours.intro.begin'}}", data-step='1')
+            .mdl-layout__header-row
+              // Title
+              span.mdl-layout-title
+                //- if showingNotes
+                //-   button#modeBackground.mdl-button.mdl-button--icon.mdl-button--colored.mdl-button--raised(style="left:{{modeBackgroundLeft}}px")
+                //-   button#noteMode.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect.mdl-button--raised(data-intro="{{_ 'tours.intro.noteMode' }}", data-step='2')
+                //-     i.material-icons fiber_manual_record
+                //-   .mdl-tooltip.mdl-tooltip--large(for='noteMode')
+                //-     | {{_ 'layouts.appBody.noteMode'}}
+                //-   button#kanbanMode.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect.mdl-button--raised(data-intro="{{_ 'tours.intro.kanbanMode' }}", data-step='3')
+                //-     i.material-icons view_column
+                //-   .mdl-tooltip.mdl-tooltip--large(for='kanbanMode')
+                //-     | {{_ 'layouts.appBody.kanbanMode'}}
+                .js-edit-note.title-page(data-intro="{{_ 'tours.intro.viewModes' }}", data-step='5')
+                  if focusedNote
+                    .title-wrapper.showingNotes(contenteditable='true') {{{focusedNoteTitle}}}
+                  else if searchTerm
+                    .title-wrapper.showingNotes(style='opacity:.5;cursor:default') Searching: {{ searchTerm }}
+                  else if showingNotes
+                    .title-wrapper.showingNotes(style='opacity:.5;cursor:default') {{_ 'layouts.appBody.home'}}
+                  else
+                    .title-wrapper BulletNotes.io
+              if currentUser
+                .mdl-layout-spacer
+                .searchIcon.mdl-textfield.mdl-js-textfield.mdl-textfield--expandable.mdl-textfield--floating-label.mdl-textfield--align-right
+                  label.mdl-button.mdl-js-button.mdl-button--icon(for='waterfall-exp')
+                    i.material-icons search
+                  .mdl-textfield__expandable-holder
+                    input#waterfall-exp.mdl-textfield__input.search(placeholder="{{_ 'layouts.appBody.search'}}...")
+                a#botHeaderButton.mdl-button.mdl-js-button.mdl-button--icon
+                    i#botIcon.material-icons chat
+                .mdl-tooltip.mdl-tooltip--large(for='botIcon')
+                    | {{_ 'layouts.appBody.botLink'}}
+                a#tagListButton.mdl-button.mdl-js-button.mdl-button--icon
+                    i#tagListIcon #
+                .mdl-tooltip.mdl-tooltip--large(for='tagListIcon')
+                    | {{_ 'layouts.appBody.tagListLink'}}
+                if showTagList
+                  +tagList
+
+
+            .mdl-layout__tab-bar.mdl-js-ripple-effect(data-intro="{{_ 'tours.intro.breadcrumbs' }}", data-step='6')
+              +breadcrumbs (noteArgs focusedNoteId)
+          .mdl-layout__drawer
+            +menu
+          main.mdl-layout__content
+            +momentum(plugin="fade")
+              if ready
+                +Template.dynamic(template=main)
+                +footer
+                #scrollToTopWrap
+                  button#scrollToTop.hasTooltip.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect.mdl-button--accent
+                    i.material-icons arrow_upward
+                .mdl-tooltip.mdl-tooltip--large.mdl-tooltip--top(for='scrollToTop')
+                  | Scroll To Top
+              else
+                +App_loading
+      +unless connected
+        .notifications
+          .notification
+            span.glyphicon.glyphicon-refresh.glyphicon-spin
+            .meta
+              .title-notification
+                | {{_ 'layouts.appBody.tryingToConnect'}}
+              .description
+                | {{_ 'layouts.appBody.connectionIssue'}}
+      if dev
+        .notifications.devWarning
+          .notification
+            span.glyphicon.glyphicon-warning-sign
+            .meta
+              .title-notification
+                | {{_ 'layouts.appBody.devWarning'}}
+              .description
+                | {{_ 'layouts.appBody.devWarningBody'}}
+  if showBotWidget
+    #botWidgetWrap
+      +botWidget
+  #snackbar.mdl-js-snackbar.mdl-snackbar
+    .mdl-snackbar__text
+    button.mdl-snackbar__action(type='button')
+  style.
+    body {
+      background: {{theme}};
+    }

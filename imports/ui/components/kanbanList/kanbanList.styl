@@ -1,0 +1,129 @@
+ul.kanbanWrap
+    width: 100%;
+    list-style-type: none;
+    margin: auto;
+    overflow-x: scroll;
+    white-space: nowrap;
+/* Some Sass variables */
+// Layout
+$appbar-height = 40px
+$navbar-height = 50px
+$list-width = 300px
+$gap = 10px
+$scrollbar-thickness = 17px
+$list-header-height = 36px
+$list-footer-height = 36px
+// Misc
+$list-border-radius = 5px
+$card-border-radius = 3px
+
+.ui
+  height: 80vh
+  display: grid
+  grid-template-rows: 1fr
+
+.navbar
+  padding-left: $gap
+  display: flex
+  align-items: center
+  &.app
+    background-color: white
+    font-size: 1.5rem
+  &.board
+    font-size: 1.1rem
+.kanbanLists
+  display: flex
+  overflow-x: auto
+  margin-top: 1em
+  font-size: .9em
+  //width: 100%; // This is needed for FF < 54
+  > *
+    flex: 0 0 auto
+    // 'rigid' lists
+    margin-left: $gap
+  &::after
+    content: ''
+    flex: 0 0 $gap
+
+.newKanbanList
+  header
+    cursor: pointer
+    opacity: .5
+    transition: opacity .25s ease-in-out
+    border-radius: $list-border-radius
+  header:hover
+    opacity: .9
+
+.kanbanList.noTitle
+  header
+    color: #888
+
+.kanbanList
+  width: $list-width
+  height: calc(100% - 100px)
+
+  .dot
+    float: left
+
+
+  .menuToggle
+    float: right
+
+  > *
+    background-color: #e2e4e6
+    color: #333
+    padding: 0 10px
+  header
+    line-height: $list-header-height
+    font-size: 16px
+    font-weight: bold
+    border-top-left-radius: $list-border-radius
+    border-top-right-radius: $list-border-radius
+    .noteTitle
+      margin-right: 2.5em
+      min-height: 2em
+  footer
+    line-height: $list-footer-height
+    border-bottom-left-radius: $list-border-radius
+    border-bottom-right-radius: $list-border-radius
+    color: #888
+    cursor: pointer
+  li
+    list-style: none
+    margin: 0
+
+    .noteTitle
+      margin-left: 3em
+      margin-right: 3em
+      padding-top: .5em
+      padding-bottom: .5em
+
+  .body
+    margin: 0
+
+  ul
+    padding-top: 1em
+    list-style: none
+    margin: 0
+    max-height: calc(100% - 27px)
+    overflow-y: auto
+    width: 100%
+    li
+      background-color: #fff
+      &:not(:last-child)
+        margin-bottom: 10px
+      border-radius: $card-border-radius
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1)
+      img
+        display: block
+        width: calc(100% + 2 * 10px)
+        margin: (-10px) 0 $gap (-10px)
+        border-top-left-radius: $card-border-radius
+        border-top-right-radius: $card-border-radius
+
+  .noteContainer
+    padding: 5px 0 0
+    
+  .title
+    font-size: .9em
+    min-height: 1.5em

@@ -1,0 +1,79 @@
+template(name="menu")
+  span.mdl-layout-title
+    a(href='/') {{_ 'app.general.siteName' }}
+  if ready
+    nav.mdl-navigation
+      .mdl-layout__drawer-button.menuToggle(aria-expanded='false', role='button', tabindex='0')
+        i.material-icons menu
+
+      if currentUser
+        .mdl-layout-spacer
+          if currentUser.isPro
+            | Thank you for upgrading to Pro! You have created {{getCount 'notes.count.user'}} notes.
+          else
+            p Note Space: {{getCount 'notes.count.user'}} / {{totalNotesAllowed}}
+            #noteSpaceUsedBar.mdl-progress.mdl-js-progress
+            a(href='/account') Get More Space
+        .buttonWrap
+          if hideUndoButton
+            button#undo.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect
+              i.material-icons undo
+            .mdl-tooltip.mdl-tooltip--large(for='undo')
+              | Undo {{action undo}}
+
+          if hideRedoButton
+            button#redo.mdl-button.mdl-js-button.mdl-button--fab.mdl-js-ripple-effect
+              i.material-icons redo
+            .mdl-tooltip.mdl-tooltip--large(for='redo')
+              | Redo {{action redo}}
+        .buttonWrap
+          button#menuPin.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect.mdl-button--primary.mdl-button--raised(class="{{muteClass}}")
+            i.material-icons {{menuPinIcon}}
+          .mdl-tooltip.mdl-tooltip--large(for='menuPin')
+            if menuPin
+              | {{_ 'layouts.menu.unpinMenu'}}
+            else
+              | {{_ 'layouts.menu.pinMenu'}}
+          //- button#mute.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect.mdl-button--colored.mdl-button--raised(class="{{muteClass}}")
+          //-   i.material-icons {{muteIcon}}
+          //- .mdl-tooltip.mdl-tooltip--large(for='mute')
+          //-   | Toggle Sounds
+          button#recentMenu.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect.mdl-button--colored.mdl-button--raised(class="{{muteClass}}")
+            i.material-icons alarm
+          .mdl-tooltip.mdl-tooltip--large(for='recentMenu')
+            | Time Filter
+        div.mdl-menu.mdl-menu--bottom-left.mdl-js-menu.mdl-js-ripple-effect(for='recentMenu')
+          a.mdl-menu__item.recentLink(href='/search/last-changed%3a1h') {{_ 'layouts.appBody.lastHour'}}
+          a.mdl-menu__item.recentLink(href='/search/last-changed%3a24h') {{_ 'layouts.appBody.lastDay'}}
+          a.mdl-menu__item.recentLink(href='/search/not-viewed%3a1M') {{_ 'layouts.appBody.oldItems'}}
+        //- +avatar(user=this shape="circle")
+        button#userMenu.mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--accent.mdl-button--raised
+          img.avatar(src="{{avatar}}")
+          | {{displayName}}
+          i.material-icons expand_more
+        div.mdl-menu.mdl-menu--bottom-left.mdl-js-menu.mdl-js-ripple-effect(for='userMenu')
+          a.mdl-menu__item.mdl-menu__item--full-bleed-divider(href='/settings') {{_ 'layouts.appBody.settings'}}
+          a.mdl-menu__item.mdl-menu__item--full-bleed-divider(href='/account') {{_ 'layouts.appBody.account'}}
+          if currentUser.isAdmin
+            a.mdl-menu__item.mdl-menu__item--full-bleed-divider(href='/admin') {{_ 'layouts.appBody.admin'}}
+          a.mdl-menu__item.js-logout {{_ 'layouts.appBody.logout'}}
+
+      else
+          a.loginBtn.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--accent.mdl-button--raised(href="{{pathFor 'signin'}}")
+            i.material-icons account_box
+            | {{_ 'layouts.appBody.login'}}
+          a.joinBtn.mdl-button.mdl-js-button.mdl-button--raised.mdl-button--accent.mdl-button--raised(href="{{pathFor 'join'}}",style="padding: 0")
+            | {{_ 'layouts.appBody.join'}}
+    if currentUser
+      span.mdl-layout-title {{_ 'layouts.appBody.favorites'}}
+      nav.mdl-navigation
+        if notes.count
+          each note in notes
+            a.favoriteNote.mdl-navigation__link(href="{{pathFor 'Notes.show' noteId=note._id}}", class='{{activeNoteClass note}}', data-count="{{increment @index}}")
+              | {{{ emoji note.title }}}
+              span.hotkeyHint {{ increment @index }}
+        else
+          p(style="margin: 1em;color:white;")
+            | No favorites yet, click the
+            span.glyphicon.glyphicon-heart(style="font-size: .8em; margin: 0 .2em")
+            | icon on some notes to the right.

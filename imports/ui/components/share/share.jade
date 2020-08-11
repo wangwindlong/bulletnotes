@@ -1,0 +1,28 @@
+template(name='share')
+  a.openShare(href='#', data-toggle='modal', data-target='#share_{{_id}}', data-id='{{_id}}', id='toggleShare_{{_id}}') open
+
+  .modal.fade(id="share_{{_id}}", tabindex='-1', role='dialog')
+    .modal-dialog
+      form.modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+          h4#myModalLabel.modal-title Share
+        .modal-body
+            p Create a shareable link
+            if shared
+              p Anyone with the following link can
+                if sharedEditable
+                  | edit
+                else
+                  | view
+                | this note and all it's sub-notes.
+              p
+                input.shareUrl(value="{{shareUrl}}",size='60')
+                i.fa.fa-copy(style='cursor:pointer')
+              p 
+                a.mdl-button--raised.mdl-button.mdl-button--colored.stopSharing Stop Sharing
+            else
+              p: input.mdl-button--raised.mdl-button.mdl-button--colored(type='submit',value='Create View Only Link',class='viewShare')
+              p: input.mdl-button--raised.mdl-button.mdl-button--colored(type='submit',value='Create Editable Link',class='editShare')
+        .modal-footer
+          button.btn.btn-sm(data-dismiss='modal') Cancel

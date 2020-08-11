@@ -1,0 +1,26 @@
+template(name='bulletNotes')
+  ol#notes.content-scrollable.note-items.sortable
+    if focusedNote.body
+      li.body(contenteditable='true')
+        if focusedNote.body
+          | {{{focusedNoteBody}}}
+        else
+          |  
+    if notesReady
+      each notes
+        +bulletNoteItem
+      if completedCount
+        .toggleComplete
+          if showComplete
+            if alwaysShowComplete
+              a.toggleAlwaysShowComplete Don't Always Show Complete
+            else
+              | Hide completed
+              a.toggleAlwaysShowComplete Always Show Complete
+          else
+            | Show completed ({{completedCount}} completed notes)
+      li.newNote
+        | Add a new note..
+    else
+      .wrapper-message
+        .title-message {{_ 'notes.show.loading'}}

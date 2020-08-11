@@ -1,0 +1,69 @@
+template(name="App_intro")
+  #introPage.extraPage
+    .intro-wrap
+        .intro-description
+            h1 BulletNotes.io
+            h2 Organize your life
+            if currentUser
+              a.register.mdl-button--raised.mdl-button.mdl-button--colored(href='/') Your Notes
+            else
+              a.register.mdl-button--raised.mdl-button.mdl-button--colored(href='/join') Create Free Account
+              a.signIn.mdl-button--raised.mdl-button.mdl-button--colored(href='/signin') Sign in
+            a.signIn.mdl-button--raised.mdl-button.mdl-button--colored(href='https://telegram.me/bulletnotesbot',target='_blank') Get started on Telegram
+
+        .intro-media
+          .shot.shot1
+            .shot-i(style="background-image: url('/img/intro/intro1.png')")
+          .shot.shot2
+            .shot-i(style="background-image: url('/img/intro/intro2.png')")
+          .shot.shot3
+            .shot-i(style="background-image: url('/img/intro/intro3.png')")
+
+
+    .mdl-grid
+      .mdl-cell.mdl-cell--4-col
+        .icon-block
+          h2
+            i.material-icons flash_on
+          h5 Fast note entry
+          p Enter notes multiple ways, from telling Siri to remind you of something, to sending a text, email or Telegram chat. Get all your thoughts in one place and sort it out later.
+      .mdl-cell.mdl-cell--4-col
+        .icon-block
+          h2.center.light-blue-text
+            i.material-icons group
+          h5.center Work Together
+          p.light
+            | Share a list of notes with someone to collaborate with them. Share a grocery list with your spouse, meeting notes with work colleagues, or your new screenplay with an editor.
+      .mdl-cell.mdl-cell--4-col
+        .icon-block
+          h2.center.light-blue-text
+            i.material-icons settings
+          h5.center Powerful
+          p.light
+            | Three different views into your notes gives you ultimate flexibility. The Bullet Notes view is simple and intuitive. The Kanban view is a classic way to get things done. The Calendar view lets you schedule and archive things.
+
+    h2 Save and organize anything with a powerful interface
+    ul
+        li.mdl-button--raised.mdl-button Todos
+        li.mdl-button.mdl-button--raised Notes
+        li.mdl-button.mdl-button--raised Journal Entries
+        li.mdl-button.mdl-button--raised Writing
+        li.mdl-button.mdl-button--raised Recipes
+        li.mdl-button.mdl-button--raised Trip Planning
+        li.mdl-button.mdl-button--raised Reference
+        li.mdl-button.mdl-button--raised Study Guides
+    h2 Integrations
+    h3 Automatically save and categorize information from almost anywhere with our integrations
+    ul
+        li.mdl-button.mdl-button--raised IFTTT
+        li.mdl-button.mdl-button--raised Telegram
+        li.mdl-button.mdl-button--raised CLI
+        li.mdl-button.mdl-button--raised API
+        li.mdl-button.mdl-button--raised Alfred
+        li.mdl-button.mdl-button--raised Dropbox
+    h2 BulletNotes Pro
+    h3 Go Pro and get a slew of extra features
+    ul
+        li.mdl-button.mdl-button--raised Unlimited Notes
+        li.mdl-button.mdl-button--raised Nightly Dropbox Backup
+    a.register.mdl-button--raised.mdl-button.mdl-button--colored(href='/join') Create Free Account

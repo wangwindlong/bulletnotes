@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+
+  bulletnotes_db:
+    image: mongo:3.2.21
+    restart: always
+    command: mongod --smallfiles --oplogSize 128
+    expose:
+      - 27017
+    volumes:
+      - ./data/bulletnotes-db:/data/db
+      - ./data/bulletnotes-db-dump:/dump
+
+  bulletnotes:
+    image: nickbusey/bulletnotes
+    command: meteor --allow-superuser run 
+    working_dir: /BulletNotes
+    links:
+      - bulletnotes_db
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      - MONGO_URL=mongodb://bulletnotes_db:27017/bulletnotes
+      - ROOT_URL=http://localhost

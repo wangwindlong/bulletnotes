@@ -1,0 +1,11 @@
+template(name='kanbanList')
+  .kanbanList(class=className, data-id="{{_id}}")
+    header
+      +noteMenu
+      +noteTitle(note=this)
+      +noteBody(kanbanListBodyArgs this)
+    
+    ul.kanbanChildNotes
+      +each childNotes
+        +kanbanListItem
+    footer Add a card...
